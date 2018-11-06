@@ -1,0 +1,74 @@
+# Copyright (C) 2011 - 2013 Bo Peng (bpeng@mdanderson.org) 
+# Distributed under GPL. see <http://www.gnu.org/licenses/>
+#
+# Please refer to http://varianttools.sourceforge.net/Format/New for
+# a description of the format of this file.
+
+[format description]
+description=Import vardict
+variant=chr,pos,ref,alt
+# variants with identical chr,pos,ref will be collapsed.
+export_by=chr,pos,ref,alt
+
+[DEFAULT]
+
+[field formatter]
+#
+# NOTE: if multiple records are collapsed, they are passed as tuples.
+# If no formatter is defined, the first value will be used in output.
+
+[chr]
+index=3
+type=VARCHAR(20)
+adj=RemoveLeading('chr')
+comment=Chromosome
+
+[pos]
+index=4
+type=INTEGER NOT NULL
+comment=1-based position
+
+[raw_pos]
+index=4
+type=INTEGER
+comment=1-based position
+
+[ref]
+index=6
+type=VARCHAR(255)
+comment=Reference allele, '-' for insertion.
+
+[alt]
+index=7
+adj=CheckSplit()
+type=VARCHAR(255)
+fmt=JoinRecords(',')
+comment=Alternative allele, '-' for deletion.
+
+[raw_ref]
+index=6
+type=VARCHAR(255)
+comment=Reference allele, without remove common leading and ending nucleotide.
+
+[raw_alt]
+index=7
+adj=CheckSplit()
+type=VARCHAR(255)
+fmt=JoinRecords(',')
+comment=Alternative allele, without remove common leading and ending nucleotide.
+
+[upstream]
+index=6,7
+adj=CommonLeading()
+type=VARCHAR(255)
+comment=Common leading alleles of ref and alt alleles stored in .vcf
+    file. This field is only available for indels.
+
+[downstream]
+index=6,7
+adj=CommonEnding()
+type=VARCHAR(255)
+comment=Common ending alleles of ref and alt alleles stored in .vcf 
+    file, common leading is extracted before common ending. This field
+    is only available for indels.
+

@@ -1,0 +1,674 @@
+[
+  {
+    "Type":"Cat",
+    "Caption":"Occurance in other samples",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"No occurance in any other sample (NrSamples = 1)",
+        "Protocoll":"Not found in any other sample",
+        "ArtiScore":0,
+        "PolyScore":-1,
+        "Condition":"!isEmpty(x('NrSamples')) && x('NrSamples') <= 1"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"(no Hotspot) AND (same variant in > 50% of all samples)",
+        "Protocoll":"(no Hotspot) AND (same variant in > 50% of all samples)",
+        "ArtiScore":2,
+        "PolyScore":0,
+        "Condition":"isEmpty(x('inHotspot')) && (x('NrSamples') > 0.5*AllSamples)"
+      },
+      {
+        "Type":"AND-Node",
+        "Checkbox":true,
+        "Caption":"Nr of samples with same variant > %d",
+        "Protocoll":"Same variant in many samples",
+        "Default":3,
+        "ArtiScore":2,
+        "PolyScore":1,
+        "Condition":"x('NrSamples') > t",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"and %d %% of these samples have VAF > 0.85",
+            "Protocoll":"Same variant in many samples AND high percentage of them have VAF > 0.85",
+            "Default":90,
+            "ArtiScore":2,
+            "PolyScore":0,
+            "Condition":"special := (x('NrSamples') > t && x('NrSamplesHighVAF') > (t/100) * x('NrSamples'))"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Allelic Frequency / Prediction",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"NOT previous AND \"unplausible\" allelic frequency <br> (< %f OR between %f - %f OR > %f)",
+        "Protocoll":"unplausible allelic frequency",
+        "Default":[0, 0.35, 0.65, 0.85],
+        "ArtiScore":0,
+        "PolyScore":1,
+        "Condition":"(previous==false) && !isEmpty(x('VAF')) && ((x('VAF') < t[0]) || (x('VAF') > t[1] && x('VAF') < t[2]) || (x('VAF') > t[3]))"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"NOT previous AND Provean score ≥ %f",
+        "Protocoll":"Provean score tolerated",
+        "Default":-1.5,
+        "ArtiScore":1,
+        "PolyScore":0,
+        "Condition":"(special==false) && (previous == false) && !isEmpty(x('Provean_max')) && (x('Provean_max') >= max(t, -2.5))"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Provean score ≥ %f",
+        "Protocoll":"Provean score tolerated",
+        "Default":-1.5,
+        "ArtiScore":0,
+        "PolyScore":1,
+        "Condition":"!isEmpty(x('Provean_max')) && (x('Provean_max') >= max(t, -2.5))"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Provean score ≤ %f",
+        "Protocoll":"Provean score deleterious",
+        "Default":-4,
+        "ArtiScore":-1,
+        "PolyScore":-1,
+        "Condition":"!isEmpty(x('Provean_max')) && (x('Provean_max') <= min(t, -2.5))"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant Allelic Frequency (VAF) < %f",
+        "Protocoll":"Low VAF",
+        "Default":0.02,
+        "ArtiScore":2,
+        "PolyScore":0,
+        "Condition":"!isEmpty(x('VAF')) && x('VAF') < t"
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Base Quality",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"OR-Node",
+        "Checkbox":true,
+        "Caption":"One of the following conditions fulfilled:",
+        "Protocoll":"One of the following conditions fulfilled:",
+        "ArtiScore":4,
+        "PolyScore":0,
+        "Condition":"",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"Low BaseQuality of alternative (threshold: %d) <br> AND: <br> (reads with reference base present) OR (BaseQuality of reference >thr)",
+            "Protocoll":"Low alternative base quality AND (reads with reference present OR good reference base quality)",
+            "Default":15,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('BQalt')) && (x('BQalt') <= t) && (x('NRref') > 0 || x('BQref') > t)"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"BaseQuality of reference by %d higher than of alternative",
+            "Protocoll":"BaseQuality of reference significantly higher than of alternative",
+            "Default":7,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('BQalt')) && (x('BQref') >= parseFloat(x('BQalt')) + t)"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"Low BaseQuality of reference (≤ %d) <br> AND high number of reference reads (> 30)",
+            "Protocoll":"Low reference base quality AND high number of reference reads present",
+            "Default":15,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('BQref')) && (x('BQref') <= t) && (x('NRref') > 30)"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Type of Variant",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"\"stop_gained\" mutations (stop_gained suchen + nie zus. mit Provean!)",
+        "Protocoll":"\"stop_gained\" mutation",
+        "ArtiScore":0,
+        "PolyScore":-1,
+        "Condition":"!isEmpty(x('varTypes')) && stringContains(x('varTypes'), 'stop_gained')"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"\"inframe\" mutations, but not \"stop_gained\"",
+        "Protocoll":"\"inframe\" mutation, but not \"stop_gained\"",
+        "ArtiScore":0,
+        "PolyScore":1,
+        "Condition":"!isEmpty(x('varTypes')) && stringContains(x('varTypes'), 'inframe') && !stringContains(x('varTypes'), 'stop_gained')"
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Insertions / Deletions",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":"Variant is an insertion / deletion / complex indel",
+        "Protocoll":"Variant is an insertion / deletion",
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"(x('ref') == '-') || (x('alt') == '-') || strLength(x('ref')) != strLength(x('alt'))",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"Different variants at same locus found in other samples?",
+            "Protocoll":"InDel AND different variation at same locus in other samples",
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"x('NrSamplesSimilar') > x('NrSamples')"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"VAF < %f",
+            "Protocoll":"InDel AND low VAF",
+            "Default":0.05,
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('VAF')) && x('VAF') < t"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"StrandBias",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":"Small StrandBias (p ≥ %f):",
+        "Protocoll":"Small StrandBias",
+        "Default":0.001,
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"!isEmpty(x('StrandBias')) && x('StrandBias') >= t",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"alternative on Forward strand ≤ 2 and reference ≥ %d",
+            "Protocoll":"StrandBias small AND reference significantly present on Forward strand",
+            "Default":15,
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"(x('NRalt_fwd') <= 2) && (x('NRref_fwd') >= t)"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"alternative on Reverse strand ≤ 2 and reference ≥ %d",
+            "Protocoll":"StrandBias small AND reference significantly present on Reverse strand",
+            "Default":15,
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"(x('NRalt_rev') <= 2) && (x('NRref_rev') >= t)"
+          }
+        ]
+      },
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":"Large StrandBias (p < %f):",
+        "Protocoll":"Large StrandBias",
+        "Default":0.001,
+        "ArtiScore":1,
+        "PolyScore":0,
+        "Condition":"!isEmpty(x('StrandBias')) && x('StrandBias') < t",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"alternative on both strands ≥ %d",
+            "Protocoll":"StrandBias large AND alternative present on both strands",
+            "Default":10,
+            "ArtiScore":-1,
+            "PolyScore":0,
+            "Condition":"min(x('NRalt_fwd'), x('NRalt_rev')) >= t"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"alternative on Forward strand ≤ 2 and reference < %d",
+            "Protocoll":"StrandBias large AND both alt and ref small on Forward strand",
+            "Default":15,
+            "ArtiScore":-1,
+            "PolyScore":0,
+            "Condition":"(x('NRalt_fwd') <= 2) && (x('NRref_fwd') < t)"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"alternative on Reverse strand ≤ 2 and reference < %d",
+            "Protocoll":"StrandBias large AND both alt and ref small on Reverse strand",
+            "Default":15,
+            "ArtiScore":-1,
+            "PolyScore":0,
+            "Condition":"(x('NRalt_rev') <= 2) && (x('NRref_rev') < t)"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Callers",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant found by only one caller",
+        "Protocoll":"Found by only one caller",
+        "ArtiScore":1,
+        "PolyScore":0,
+        "Condition":"x('NrCallers') == 1"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant found by 4 callers",
+        "Protocoll":"Found by 4 callers",
+        "ArtiScore":-1,
+        "PolyScore":0,
+        "Condition":"x('NrCallers') == 4"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant found by 5 callers",
+        "Protocoll":"Found by 5 callers",
+        "ArtiScore":-2,
+        "PolyScore":0,
+        "Condition":"x('NrCallers') == 5"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant found by ≥ 6 callers",
+        "Protocoll":"Found by >= 6 callers",
+        "ArtiScore":-3,
+        "PolyScore":1,
+        "Condition":"x('NrCallers') >= 6"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Called by LoFreq and FreeBayes and VarDict",
+        "Protocoll":"Called by LoFreq and FreeBayes and VarDict",
+        "ArtiScore":-3,
+        "PolyScore":0,
+        "Condition":"!isEmpty(x('Callers')) && stringContains(x('Callers'), 'lofreq') && stringContains(x('Callers'), 'freebayes') && stringContains(x('Callers'), 'vardict')"
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Databases",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":"Databases to be used:",
+        "Protocoll":"",
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"true",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"COSMIC *with not SNP and \"haematopoietic and lymphoid tissue\" > %d",
+            "Protocoll":"",
+            "Default":20,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrClinicalDBs := NrClinicalDBs + (!isEmpty(x('CosmicID')) && x('CosmicSNP') != 1 && x('Cosmic_NrHaemato') > t))+ (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('CosmicID')) && (x('CosmicSNP') == 1 || x('Cosmic_NrHaemato') <= t)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('CosmicID')))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"ClinVar *with significance rating as \"(likely) pathogenic\"",
+            "Protocoll":"",
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrClinicalDBs := NrClinicalDBs + (!isEmpty(x('ClinVar_Significance')) && stringContains(x('ClinVar_Significance'), 'athogenic')))+ (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('ClinVar_Significance')) && !stringContains(x('ClinVar_Significance'), 'athogenic')))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('ClinVar_Significance')))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"dbSNP *with PM_flag or not in v129",
+            "Protocoll":"",
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrClinicalDBs := NrClinicalDBs + (!isEmpty(x('dbSNP')) && (x('dbSNP_PM') == 1 || x('dbSNP_Version') > 129)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('dbSNP')))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"dbSNP v129 (wird in NrAnyDBs zweifach gezaehlt!)",
+            "Protocoll":"",
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('dbSNP')) && (x('dbSNP_Version') <= 129)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('dbSNP')) && (x('dbSNP_Version') <= 129))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"1000Genomes, threshold: > %f",
+            "Protocoll":"",
+            "Default":0.001,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('G1000_AF')) && (x('G1000_AF') > t)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('G1000_AF')))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"ESP6500, threshold: > %f",
+            "Protocoll":"",
+            "Default":0.03,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('ESP6500')) && (x('ESP6500') > t)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('ESP6500')))) ) && false"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"ExAC, threshold: > %f",
+            "Protocoll":"",
+            "Default":0.0005,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Condition":"( (NrNonClinicalDBs := NrNonClinicalDBs + (!isEmpty(x('ExAC_all')) && (x('ExAC_all') > t)))+ (NrAnyDBs := NrAnyDBs + (!isEmpty(x('ExAC_all')))) ) && false"
+          }
+        ]
+      },
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":" <br> Variant not present in any of the previous databases",
+        "Protocoll":"",
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"NrAnyDBs == 0",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"and VAF < %f",
+            "Protocoll":"Not in any DB AND VAF very small",
+            "Default":0.1,
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('VAF')) && x('VAF') < t"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"and same variant in > 50% of all samples",
+            "Protocoll":"Not in any DB AND rare in other samples",
+            "ArtiScore":1,
+            "PolyScore":0,
+            "Condition":"x('NrSamples') > 0.5*AllSamples"
+          }
+        ]
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant matching thresholds in no (non-clinical*) database",
+        "Protocoll":"Not found in any (non-clinical) database",
+        "ArtiScore":0,
+        "PolyScore":-1,
+        "Condition":"NrNonClinicalDBs == 0"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant matching thresholds in 2 or 3 (non-clinical*) databases",
+        "Protocoll":"Found in 2 or 3 (non-clinical) databases",
+        "ArtiScore":0,
+        "PolyScore":1,
+        "Condition":"(NrNonClinicalDBs == 2) || (NrNonClinicalDBs == 3)"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant matching thresholds in ≥ 4 (non-clinical*) databases",
+        "Protocoll":"Found in >= 4 (non-clinical) databases",
+        "ArtiScore":0,
+        "PolyScore":2,
+        "Condition":"NrNonClinicalDBs >= 4"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant found in ≥ 2 disease associated DBs*",
+        "Protocoll":"Found in >= 2 disease associated DBs",
+        "ArtiScore":0,
+        "PolyScore":-1,
+        "Condition":"NrClinicalDBs >= 2"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant identified as \"Precious mutation\" (PM) by dbSNP",
+        "Protocoll":"Precious mutation by dbSNP",
+        "ArtiScore":0,
+        "PolyScore":-2,
+        "Condition":"x('dbSNP_PM') == 1"
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Known Hotspots",
+    "Color":"#96B4D7",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Variant in a known hotspot mutation site",
+        "Protocoll":"Known hotspot site",
+        "ArtiScore":-3,
+        "PolyScore":0,
+        "Condition":"!isEmpty(x('inHotspot'))"
+      },
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Not a known hotspot, but \"Precious mutation\" by dbSNP",
+        "Protocoll":"Precious mutation by dbSNP",
+        "ArtiScore":-1,
+        "PolyScore":0,
+        "Condition":"isEmpty(x('inHotspot')) && (x('dbSNP_PM') == 1)"
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Finally: Exclude improbable polymorphisms",
+    "Color":"#DC9696",
+    "Entries":
+    [
+      {
+        "Type":"AND-Node",
+        "Checkbox":false,
+        "Caption":"High Polymorphism score (≥ %d), no hotspot AND:",
+        "Protocoll":"",
+        "Default":2,
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"(PolyScore >= t) && isEmpty(x('inHotspot'))",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"VAF ≤ %f",
+            "Protocoll":"Likely Polymorphism AND VAF very small",
+            "Default":0.1,
+            "ArtiScore":5,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('VAF')) && x('VAF') <= t"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"VAF ≤ %f",
+            "Protocoll":"Likely Polymorphism AND VAF small",
+            "Default":0.2,
+            "ArtiScore":2,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('VAF')) && x('VAF') <= t"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"frameshift_mutation",
+            "Protocoll":"Likely Polymorphism AND frameshift mutation",
+            "ArtiScore":2,
+            "PolyScore":0,
+            "Condition":"!isEmpty(x('varTypes')) && stringContains(x('varTypes'), 'frameshift_variant')"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "Type":"Cat",
+    "Caption":"Evaluation",
+    "Color":"#9BBB59",
+    "Entries":
+    [
+      {
+        "Type":"Entry",
+        "Checkbox":true,
+        "Caption":"Artifact: Artifact score ≥ %d",
+        "Protocoll":"",
+        "Default":0,
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Result":"Artifact",
+        "Condition":"ArtiScore >= t"
+      },
+      {
+        "Type":"AND-Node",
+        "Checkbox":true,
+        "Caption":"Possible Polymorphism (no hotspot, no frameshift and high VAF)",
+        "Protocoll":"",
+        "ArtiScore":0,
+        "PolyScore":0,
+        "Condition":"isEmpty(x('inHotspot')) && (x('VAF') > 0.2) && (isEmpty(x('varTypes')) || !stringContains(x('varTypes'), 'frameshift_variant'))",
+        "Entries":
+        [
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"likely Polymorphism: Polymorphism score ≥ %d",
+            "Protocoll":"",
+            "Default":2,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Result":"likely Polymorphism",
+            "Condition":"PolyScore >= t"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"Polymorphism: (Polymorphism score ≥ %d) AND (Cosmic NrHaemato ≤ 100)",
+            "Protocoll":"",
+            "Default":2,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Result":"Polymorphism",
+            "Condition":"(PolyScore >= t) && (isEmpty(x('Cosmic_NrHaemato')) || x('Cosmic_NrHaemato')<=100)"
+          },
+          {
+            "Type":"SubEntry",
+            "Checkbox":true,
+            "Caption":"Polymorphism: Polymorphism score ≥ %d",
+            "Protocoll":"",
+            "Default":3,
+            "ArtiScore":0,
+            "PolyScore":0,
+            "Result":"Polymorphism",
+            "Condition":"PolyScore >= t"
+          }
+        ]
+      }
+    ]
+  }
+]

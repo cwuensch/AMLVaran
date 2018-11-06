@@ -1,0 +1,863 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+
+
+/* Padding below the footer and lighter body text */
+
+$color1: #5d62a0;
+$color1-pale: #8287bc;
+$color2: #D1BAB6;
+$color3: #fff9f8;
+$color3-dark: #f2f0ef;
+$color4: #e2dfde;
+$color5: #27282b;
+$color5-pale: #61636b;
+$bordercolor: #bbbbbb;
+$coloredvariant1: #f0bcb4;
+$coloredvariant2: #f8caad;
+$coloredvariant3: #ffeed2;
+
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    background-color: $color4;
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+    color: $color5;
+    border-color: $bordercolor;
+    overflow-y: scroll;
+}
+
+a {
+    color: $color1;
+    &:hover {
+        color: $color1;
+    }
+}
+
+hr {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 30px;
+    background-color: black;
+}
+
+
+/* BOOTSTRAP OVERWRITE
+-------------------------------------------------- */
+
+.nav-tabs {
+    font-weight: bold;
+    border-color: $bordercolor;
+}
+
+.nav-tabs > li.active > a {
+    background-color: $color3;
+    border-color: $bordercolor $bordercolor transparent;
+    color: $color5;
+    &:focus,
+    &:hover {
+        background-color: $color3;
+    }
+}
+
+#report { 
+    display: block;
+    float: right;
+    padding: 10px 15px; 
+    background-color: $color3;
+    border: 1px solid;
+    border-color: $bordercolor $bordercolor transparent;
+    color: $color5;
+    border-radius: 4px 4px 0px 0px;  
+    cursor: pointer;
+}
+/*#personalReportpopover { 
+    display: block;
+    float: right;
+    padding: 10px 15px; 
+    background-color: $color3;
+    border: 1px solid;
+    border-color: $bordercolor $bordercolor transparent;
+    color: $color5;
+    border-radius: 4px 4px 0px 0px;  
+}
+#report .popover {
+    min-width: 50%;
+    max-width: 100%;
+}*/
+
+.nav-tabs2 {
+    text-align: center;
+}
+
+.nav-tabs2.active {
+    border-bottom: 1px solid $bordercolor;
+}
+
+.nav-tabs2 > li {
+    float: none;
+    display: inline-block;
+    margin-bottom: -1px;
+    *display: inline;
+    zoom: 1;
+}
+
+.nav-tabs2 > li > a {
+    border: 1px solid transparent;
+    font-size: 22px;
+    &:focus,
+    &:hover {
+        background-color: $color3-dark;
+        border: 1px solid $bordercolor;
+    }
+}
+
+.nav-tabs2 > li.active > a {
+    background-color: $color3-dark;
+    border-color: $bordercolor $bordercolor transparent;
+    color: $color5;
+    &:focus,
+    &:hover {
+        border-color: $bordercolor $bordercolor transparent;
+    }
+}
+
+.table > {
+    border-color: $bordercolor;
+    tbody > tr > {
+        td,
+        th {
+            padding: 2px;
+            font-size: 13px;
+            color: $color5;
+            border-color: $bordercolor;
+        }
+    }
+    tfoot > tr > {
+        td,
+        th {
+            padding: 2px;
+            font-size: 13px;
+            color: $color5;
+            border-color: $bordercolor;
+        }
+    }
+    thead > tr > {
+        td,
+        th {
+            padding: 2px;
+            font-size: 13px;
+            color: $color5;
+            border-color: $bordercolor;
+        }
+    }
+}
+
+h3 {
+    color: $color1;
+    font-weight: bold;
+}
+
+.panel-default > .panel-heading {
+    border-color: $bordercolor;
+    background-color: $color3-dark;
+}
+
+.panel {
+    border-color: $bordercolor;
+    background-color: $color3;
+}
+
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+.navbar-default {
+    background-color: $color3-dark;
+    border-color: $bordercolor;
+    margin-bottom: 0;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: $color5;
+}
+
+.navbar-brand {
+    font-family: 'Verdana';
+    font-size: 20px;
+}
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+
+.navbar-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+    > .container {
+        padding-right: 0;
+        padding-left: 0;
+        margin-left: 20%;
+    }
+    .navbar {
+        padding-right: 15px;
+        padding-left: 15px;
+        .container {
+            width: auto;
+        }
+    }
+}
+
+
+/* Flip around the padding for proper display in narrow viewports */
+
+
+/* CUSTOMIZE THE BOOTSTRAP ROWS AND COLUMNS
+-------------------------------------------------- */
+
+.row1,
+.row2 {
+    margin: 0px;
+}
+
+.column1 {
+    margin-top: 0px;
+    margin-bottom: 80px;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.column2 {
+    margin-top: 180px;
+    margin-bottom: 80px;
+    padding-left: 25%;
+    padding-right: 25%;
+    font-size: 18px;
+}
+
+.column3 {
+    margin-top: 10px;
+    margin-bottom: 150px;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.column4 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.column5 {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.column6 {
+    margin-top: 10px;
+    margin-bottom: 150px;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.column7 {
+    padding-left: 25%;
+    padding-right: 25%;
+    margin-bottom: 30px;
+}
+
+.column8 {
+    margin: 10px 0px;
+    padding: 0px;
+}
+
+.columnwide {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.columnfooter {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    padding-left: 25%;
+    color: #81a1e6;
+}
+
+.columnfooter-1 {
+    padding-right: 8%;
+    color: #81a1e6;
+    margin-bottom: 90px;
+}
+
+.columnfooter-2 {
+    padding-left: 8%;
+    color: #81a1e6;
+    margin-bottom: 90px;
+}
+
+.columnbreadcrumbs {
+    margin-top: 70px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.container-fluid2 {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+/* CONTENT PANELS
+-------------------------------------------------- */
+
+.mainpanelResults {
+    background-color: $color3;
+    padding: 14px;
+    padding-top: 24px;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    border-top: none;
+    border-color: $bordercolor;
+    margin-bottom: 30px;
+}
+
+#personalReport{
+    background-color: $color3;
+    padding: 14px;
+    padding-top: 24px;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    border-top: none;
+    border-color: $bordercolor;
+    margin-bottom: 0px;
+    /*position: absolute;
+    right: 15px;
+    z-index: 1000;
+    margin-top: -1px;
+    background-color: $color3;
+    padding: 14px;
+    padding-top: 24px;
+    border: 1px solid;
+    border-color: $bordercolor;
+    margin-bottom: 0px;
+    border-radius: 4px 0px 4px 4px;
+    width: 50%;*/
+}
+
+.additionalpanel {
+    background-color: $color3;
+    padding: 14px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: $bordercolor;
+    margin-bottom: 30px;
+}
+
+.patientpanelResults {
+    width: 50%;
+}
+
+.samplepanel {
+    float: right;
+    width: 50%;
+}
+
+.diagnosispanel {
+    width: 800px;
+    margin: auto;
+    margin-top: 30px;
+    padding: 10px;
+    border: 1px solid $bordercolor;
+}
+
+.patientslistpanel {
+    overflow-y:auto;
+    max-height:600px;
+    border: 1px solid $bordercolor;
+}
+
+.tablepanelPatients {
+    margin-top: 20px;
+    background-color: $color3;
+    border: 1px solid $bordercolor;
+}
+
+.patientpanelPatients {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: $color3;
+    border: 1px solid $bordercolor;
+    height: 215px;
+    color: $color5-pale;
+}
+
+.uploadSamplePatientPanel {
+    background-color: $color3-dark;
+    padding: 14px;
+    padding-top: 24px;
+    margin-bottom: 30px;
+    height: 340px;
+}
+
+.filterpanel {
+    padding: 10px;
+    border: 1px solid $bordercolor;
+}
+
+.filterpanel_loading {
+    padding: 10px;
+    border: 1px solid $bordercolor;
+    text-align: center;
+}
+
+.filtertoggle {
+    font-size: 16px;
+    color: $color1-pale;
+    cursor: pointer;
+    &:hover {
+        color: #aaa;
+    }
+}
+
+.filtercheckbox>input:checked {
+    color: gray;
+}
+
+#selectedgenes {
+
+}
+
+
+/* Automated Filtration Styles */
+#complexfilterpanel .form-control {
+    display: inline-block;
+    padding: 0px 5px;
+    height: 25px;
+    width: 60px;
+}
+.filter-block {
+    margin-bottom: 20px;
+    width: 800px;
+}
+.filter-block > div {
+    vertical-align: top;
+}
+
+.filter-category {
+    margin-bottom: 3px;
+}
+.filter-entry {
+    padding-left: 20px;
+    vertical-align: top;
+}
+.filter-entry > div{
+    vertical-align: top;
+}
+/*.filter-entry:hover {
+    background-color: #d3d3d3;
+}*/
+.filter-subentry {
+    padding-left: 20px;
+    display: block;
+    vertical-align: top;
+}
+/*.filter-subentry:hover {
+    background-color: #bdbdbd;
+}*/
+.filter-subentry > div {
+    vertical-align: top;
+}
+.filter-caption {
+    width: 600px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+.filter-protocol {
+    display: none;
+}
+/*.filter-scores {
+    float: right;
+    display: inline-block; 
+}*/
+.artifact_score {
+    display: inline-block;
+    width: 35px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: darkseagreen;
+    color: white;
+    text-align: center;
+}
+.poly_score {
+    display: inline-block;
+    margin-left: 10px;
+    width: 35px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: skyblue;
+    color: white;
+    text-align: center;
+}
+
+/* GENE BUTTONS
+-------------------------------------------------- */
+
+#genebutton {
+    margin: 1px;
+}
+
+.btn-mutations {
+    .badge {
+        color: $color1;
+        background-color: #fff;
+    }
+    &:hover {
+        color: #FFF;
+        background-color: $color1;
+        border-color: #315196;
+    }
+    color: #FFF;
+    background-color: $color1-pale;
+    border-color: #5171b6;
+}
+
+.btn-filtered {
+    color: #444;
+    background-color: #e6e7ff;
+    border-color: #bfd3ff;
+}
+
+.btn-badcovered {
+    &:hover {
+        color: #444;
+        background-color: #888;
+        border-color: #777;
+    }
+    color: #444;
+    background-color: #777;
+    border-color: #666;
+}
+
+.activefilter {
+    background-color: #9181ff;
+    &:hover {
+        background-color: #7161ff;
+    }
+}
+
+.btn-select {
+    &:hover {
+        color: #444;
+        background-color: $color3-dark;
+        border-color: #999;
+    }
+    color: #444;
+    background-color: $color3;
+    border-color: #999;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0px;
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -moz-user-select: none;
+    background-image: none;
+    border: 1px solid;
+    border-radius: 20px;
+}
+
+.genefiltered {
+    display: none;
+}
+
+.regionfiltered {
+    display: none;
+}
+
+.typefiltered {
+    display: none;
+}
+
+.automatedfiltered {
+    display: none;
+}
+
+.exclusionfiltered {
+    display: none;
+}
+
+.filter_checkmark {
+    display: none;
+    color: #00FF00;
+    margin-left: 5px;
+}
+
+.active_filter {
+    border-color: #26b326;
+}
+
+/* SCROLLABLE DROPDOWN
+-------------------------------------------------- */
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+
+/* GLYPHICON BUTTONS
+-------------------------------------------------- */
+
+.glyphbigbutton {
+    font-size: 70px;
+    cursor: pointer;
+    color: $color1;
+    opacity: 0.6;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.glyphmediumbutton {
+    font-size: 26px;
+    cursor: pointer;
+    color: $color1;
+    opacity: 0.6;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.glyphsmallbutton {
+    font-size: 20px;
+    cursor: pointer;
+    color: $color1;
+    opacity: 0.6;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.glyphbuttondisabled {
+    color: #aaa;
+    cursor: default;
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+
+/* PROGRESS BARS
+-------------------------------------------------- */
+
+.progress-bar {
+    background-color: #81a1e6 !important;
+}
+
+.pb-centered {
+    position: absolute;
+    right: 0;
+    left: 0;
+}
+
+
+/* PATIENTS AND ANALYSES LIST
+-------------------------------------------------- */
+
+.chosenli {
+    background-color: $color1-pale;
+}
+
+.listitem {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-top: 1px solid $bordercolor;
+    width: 100%;
+    cursor: pointer;
+    background-color: $color3;
+    &:hover {
+        background-color: $color3-dark;
+    }
+}
+
+.listitem-clicked {
+    background-color: $color1-pale;
+    &:hover {
+        background-color: $color1;
+    }
+}
+
+.patientname {
+    width: 80%;
+    text-align: left;
+    float: left;
+    background: transparent;
+    font-size: 13pt;
+}
+
+.patientbutton {
+    text-align: left;
+    float: left;
+}
+
+
+/* CUSTOMIZE THE BREADCRUMBS
+-------------------------------------------------- */
+
+
+/*change breadcrumb background color*/
+
+.breadcrumb {
+    background-color: #FFFFFF;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -o-border-radius: 0;
+}
+
+
+/* TABLES
+-------------------------------------------------- */
+
+table {
+    font-family: 'Arial';
+}
+
+.additionalinfotable > tbody > tr > td {
+    border: 1px solid $bordercolor;
+    padding: 6px;
+    min-width: 120px;
+    font-size: 13px;
+}
+
+.additionalinfotable > tbody > tr > td.labelcol {
+    border: 1px solid $color1-pale;
+    background-color: $color1-pale;
+    color: $color3;
+    padding: 6px;
+    width: 220px;
+}
+
+#fullwidth {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.popover-target {
+    label {
+        margin: 0 5px;
+        display: block;
+    }
+    input {
+        margin-right: 5px;
+    }
+}
+
+.tablesorter-bootstrap > tbody > tr.odd > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
+	background-color: $color3;
+}
+
+.tablesorter-bootstrap > tbody > tr.even > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.even:hover ~ tr.tablesorter-hasChildRow.even ~ .tablesorter-childRow.even > td {
+	background-color: $color3;
+}
+
+
+
+
+
+.tablesorter-bootstrap > tbody > tr.coloredvariant1 > td {
+    background-color: $coloredvariant1;
+}
+
+.tablesorter-bootstrap > tbody > tr.coloredvariant2 > td {
+    background-color: $coloredvariant2;
+}
+
+.tablesorter-bootstrap > tbody > tr.coloredvariant3 > td {
+    background-color: $coloredvariant3;
+}
+
+.coloredvariant1 + .popover {background: $coloredvariant1;}
+.coloredvariant1 + .popover > .arrow:after {border-top-color: $coloredvariant1;}
+
+.coloredvariant2 + .popover {background: $coloredvariant2;}
+.coloredvariant2 + .popover > .arrow:after {border-top-color: $coloredvariant2;}
+
+.coloredvariant3 + .popover {background: $coloredvariant3;}
+.coloredvariant3 + .popover > .arrow:after {border-top-color: $coloredvariant3;}
+
+.coloredvariant1 {fill: $coloredvariant1;}
+
+.coloredvariant2 {fill: $coloredvariant2;}
+
+.coloredvariant3 {fill: $coloredvariant3;}
+
+#allsubtable > tbody > tr, #civictable > tbody > tr {
+    cursor: pointer;
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+    /* Navbar positioning foo */
+    .navbar-wrapper {
+        margin-top: 20px;
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        .navbar {
+            padding-right: 0;
+            padding-left: 0;
+            border-radius: 4px;
+        }
+    }
+    /* The navbar becomes detached from the top, so we round the corners */
+    /* Bump up size of carousel content */
+    .carousel-caption p {
+        margin-bottom: 20px;
+        font-size: 21px;
+        line-height: 1.4;
+    }
+    .featurette-heading {
+        font-size: 50px;
+    }
+}
+
+@media (min-width: 992px) {
+    .featurette-heading {
+        margin-top: 120px;
+    }
+}

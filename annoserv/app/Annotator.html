@@ -1,0 +1,979 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=10">
+  <title>Variant Score Calculation</title>
+
+  <style type="text/css">
+    * {
+      font-family: 'Arial', sans-serif;
+      font-size: 10pt;
+    }
+    
+    table {
+      font-family: Arial, Sans-Serif;
+      font-size: 10pt;
+      table-layout:fixed;
+      border-spacing: 0px;
+      border-collapse: collapse;
+    }
+    
+    table.scroll tbody,
+    table.scroll thead {display: block}
+
+    table.scroll tbody {
+        overflow-y: scroll;
+        overflow-x: hide;
+    }
+
+    td, th {
+      width: 120px;
+      max-width: 120px;
+      min-width: 120px;
+      border: 1px solid;
+      border-spacing: 0px;
+      border-collapse: collapse;
+      word-wrap: unset;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th { 
+      height:30px;
+      line-height:12px;
+      background-color: gray;
+    }
+  
+    textarea {
+      white-space: pre;
+      overflow: auto;
+    }
+    
+    .form-control {
+        display: inline-block;
+        padding: 0px 5px;
+        height: 22px;
+        width: 50px;
+        vertical-align: top;
+    }
+    .filters {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .filter-block
+    {
+        margin-bottom: 20px;
+        width: 800px;
+    }
+    .filter-block > div {
+        vertical-align: top;
+    }
+    .filter-category {
+        margin-bottom: 5px;
+        padding: 3px;
+        font-weight: bold;
+    }
+    .filter-entry {
+        padding-left: 20px;
+        vertical-align: top;
+    }
+    .filter-entry > span {
+        vertical-align: top;
+    }
+    .filter-subentry {
+        padding-left: 20px;
+        display: block;
+        vertical-align: top;
+    }
+    .filter-subentry > span {
+        vertical-align: top;
+    }
+    .filter-caption {
+        width: 500px;
+        display: inline-block;
+        margin-bottom: 5px;
+    }
+    .filter-scores {
+        display: inline-block;
+        float: right;
+    }
+    .filter-scores > a {
+        text-decoration:none;
+    }
+    .filter-artiscore {
+        display: inline-block;
+        width: 35px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background-color: darkseagreen;
+        color: white;
+        text-align: center;
+    }
+    .filter-polyscore {
+        display: inline-block;
+        margin-left: 10px;
+        width: 35px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background-color: skyblue;
+        color: white;
+        text-align: center;
+    }
+    .filter-buttons {
+      width: 800px;
+      position: absolute;
+      bottom: 0;
+      margin:0px;
+      padding:3px 0px 4px 0px;
+      background-color:white;
+      text-align: right;
+    }
+  </style>
+
+  <script type="text/javascript" src="Interpreter.js"></script>
+  
+  <script type="text/javascript">
+    window.addEventListener('resize', Resize, false);
+    function initResize(e) {
+      window.removeEventListener('resize', Resize, false);
+      window.addEventListener('mousemove', Resize, false);
+      window.addEventListener('mouseup', stopResize, false);
+    }
+    function Resize(e) {
+      var GUI = document.getElementById('GUI');
+      if (e !== null)
+      {
+//        GUI.style.width = (e.clientX - GUI.offsetLeft) + 'px';
+        GUI.style.height = (e.clientY - GUI.offsetTop - 5) + 'px';
+      }
+      document.getElementById('Output').style.height = (window.innerHeight - parseInt(GUI.style.height) - 85) + 'px';
+      if (document.getElementById('OutputBody'))
+        document.getElementById('OutputBody').style.height = (window.innerHeight - parseInt(GUI.style.height) - 135) + 'px';
+    }
+    function stopResize(e) {
+      window.removeEventListener('mousemove', Resize, false);
+      window.removeEventListener('mouseup', stopResize, false);
+      window.addEventListener('resize', Resize, false);
+    }
+  </script>
+  
+  <script type="text/javascript">
+    if (!Object.keys) Object.keys = function(o) {
+      if (o !== Object(o))
+        throw new TypeError('Object.keys called on a non-object');
+      var k=[], p;
+      for (p in o) if (Object.prototype.hasOwnProperty.call(o,p)) k.push(p);
+      return k;
+    }
+    if(!Array.isArray) {
+      Array.isArray = function (vArg) {
+        return Object.prototype.toString.call(vArg) === "[object Array]";
+      };
+    }
+    function isIE() {
+      var ua = window.navigator.userAgent;
+      return (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0);
+    }  
+    
+    function loadXMLDoc(url, post, callback) {
+      var xmlhttp;
+      var txt;
+
+      function XMLcallback() {
+        if (xmlhttp.readyState == 4)
+        {
+          if (xmlhttp.status == 200 || xmlhttp.status == 0) {
+            callback(xmlhttp.responseText);
+          }
+          else
+            showStatus('Error while loading data!');
+        }
+      }
+
+      try {
+        if (window.XMLHttpRequest)
+          xmlhttp = new XMLHttpRequest();
+        
+        xmlhttp.onreadystatechange = XMLcallback;
+        xmlhttp.open("POST", url, true);
+//        xmlhttp.setRequestHeader("Content-type", "application/json");
+        xmlhttp.send(post);
+      }
+
+      catch (err) {
+        if (isIE())
+        {
+          try {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = XMLcallback;
+            xmlhttp.open("POST", url, true);
+            xmlhttp.send(post);
+          }
+          catch (err) {
+            if (url.indexOf("http") >= 0)
+              showStatus('Error while connection to server!');
+            else
+              showStatus('Error while loading local file!');
+          }
+        }
+        else
+          if (url.indexOf("http") >= 0)
+            showStatus('Error while connection to server!');
+          else
+            showStatus('Error while loading local file!');
+      }
+    }
+  </script>
+  
+  <script type="text/javascript">
+    var excelMode = false;
+    var outputFunc;
+    
+    var objExcel;
+    var objSheet;
+    var actSheet;
+  </script>
+ 
+  <script type="text/javascript">
+    /* Helper functions */
+    function x(ColumnName) {
+      var cur = VariantList[curLine][ColumnName];
+      if (!isEmpty(cur))
+        return cur;
+      else
+        return null;
+    }
+  </script>
+
+  <script type="text/javascript">
+    function loadJSON2(txtJSON)
+    {
+      var iDoc = document.getElementById("frameJSON");
+      if (typeof(txtJSON) == "undefined")
+      {
+        document.getElementById("schemeInput").click();
+        var url = document.getElementById("schemeInput").files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          txtJSON = e.target.result;
+          showStatus('Loading filter scheme...');
+          setTimeout(loadJSON2, 20, txtJSON);
+        };
+        reader.readAsText(url);
+        return;
+      }      
+      else if (txtJSON == "")
+        txtJSON = (iDoc.contentDocument || iDoc.contentWindow.document).body.innerText; 
+        
+      if (loadJSON(txtJSON))
+      {
+        showStatus("Creating GUI...");
+        window.setTimeout(createGUI2, 10);
+      }
+      else
+        showStatus("Error reading filter scheme.");
+    }
+
+    function createGUI2()
+    {
+      createGUI();
+      
+      if (VariantList && (VariantList.length > 0) && (typeof(VariantList[0]) == "undefined"))
+        showStatus("Ready. No variants loaded.");
+      else
+        showStatus("Ready.");
+    }
+        
+    function applyFilters2()
+    {
+      readFromGUI();
+      if (applyFilters())
+      {
+        showStatus("Rendering table...");
+        window.setTimeout(outputFunc, 20);
+      }
+      else
+        showStatus("Error applying score calculation.");
+    }
+  </script>
+  
+  <script type="text/javascript">
+    /* Normalize a variant object, containing pos, ref, alt */
+    function Normalize(variant)
+    {
+      while ((variant.ref != "") && (variant.alt != "") && (variant.ref.charAt(0) == variant.alt.charAt(0)))
+      {
+        variant.ref = variant.ref.substr(1);
+        variant.alt = variant.alt.substr(1);
+        variant.pos += 1;
+        if (variant.ref == "") variant.ref = "-";
+        if (variant.alt == "") variant.alt = "-";
+      }
+      return variant;
+    }  
+  
+    /* Read the annotated variants from server */
+    function parseAnno(response)
+    {
+      try {
+        var VariantAnno = eval(response);
+        var AnnoColumns = Object.keys(VariantAnno[0]);
+        var AnnoSorted = new Array(VariantAnno.length);
+        var var_o, var_n, ann;
+        var i, j, k;
+        AnnoColumns.push("NrSamples");
+        AnnoColumns.push("NrSamplesSimilar");
+        AnnoColumns.push("NrSamplesHighVAF");
+        
+        // Sortiertes Annotation-Array erzeugen
+        for (i = 0; i < VariantAnno.length; i++)
+        {
+          ann = VariantAnno[i];
+          if (typeof(AnnoSorted[ann.chr]) == "undefined")
+            AnnoSorted[ann.chr] = [];
+          if (typeof(AnnoSorted[ann.chr][ann.pos]) == "undefined")
+            AnnoSorted[ann.chr][ann.pos] = [];
+          if (typeof(AnnoSorted[ann.chr][ann.pos][ann.ref]) == "undefined")
+            AnnoSorted[ann.chr][ann.pos][ann.ref] = [];
+          ann["NrSamples"] = 0;
+          ann["NrSamplesSimilar"] = 0;
+          ann["NrSamplesHighVAF"] = 0;
+          AnnoSorted[ann.chr][ann.pos][ann.ref][ann.alt] = ann;
+        }
+
+        // Anzahl Vorkommen im sortierten Array zählen
+        for (i = 0; i < VariantList.length; i++)
+        {
+          var_o = VariantList[i];
+          if (var_o.chr=="" || var_o.pos==0 || var_o.ref=="" || var_o.alt=="") continue;
+          var_n = []; var_n["chr"]=var_o.chr; var_n["pos"]=var_o.pos; var_n["ref"]=var_o.ref; var_n["alt"]=var_o.alt; 
+          Normalize(var_n);
+          ann = AnnoSorted[var_n.chr][var_n.pos][var_n.ref][var_n.alt];
+          ann["NrSamples"] += 1;
+
+          if ((typeof(var_o.VAF) != undefined) && (var_o.VAF > 0.85))
+            ann["NrSamplesHighVAF"] += 1;
+
+          ann = AnnoSorted[var_n.chr][var_n.pos];
+          var refs = Object.keys(ann);
+          for (j = 0; j < refs.length; j++)
+          {
+            var alts = Object.keys(ann[refs[j]]);
+            for (k = 0; k < alts.length; k++)
+              ann[refs[j]][alts[k]]["NrSamplesSimilar"] += 1;
+          }
+        }
+
+        // Annotationen den Varianten zuordnen
+        for (i = 0; i < VariantList.length; i++)
+        {
+          var_o = VariantList[i];
+          if (var_o.chr=="" || var_o.pos==0 || var_o.ref=="" || var_o.alt=="") continue;
+          var_n = []; var_n["chr"]=var_o.chr; var_n["pos"]=var_o.pos; var_n["ref"]=var_o.ref; var_n["alt"]=var_o.alt; 
+          Normalize(var_n);
+          ann = AnnoSorted[var_n.chr][var_n.pos][var_n.ref][var_n.alt];
+          
+          for (j = 0; j < AnnoColumns.length; j++)
+          {
+            if (j>3)  // (isEmpty(var_o[AnnoColumns[j]]))
+            {
+              var curVal = ann[AnnoColumns[j]];
+              var asFloat = parseFloat(curVal);
+              if (curVal == "null") curVal = null;
+              var_o[AnnoColumns[j]] = (!isNaN(asFloat) && (curVal.length - asFloat.toString().length < 4) ? asFloat : curVal);
+            }
+          }
+        }
+        showStatus("Rendering table...");
+        window.setTimeout(outputFunc, 20);
+      }
+      catch (err) {
+        showStatus("Error processing annotation info.");
+      }
+    }
+
+    /* Output variants as JSON (for annotation) */
+    function createRequest()
+    {
+//      try {
+        var VariantColumns = Object.keys(VariantList[0]);
+        var VariantSorted = new Array(VariantList.length);
+        var curVar;
+        var i, j, k, l
+        
+        // Sortiertes Varianten-Array erzeugen (Duplikate entfernen)
+        for (i = 0; i < VariantList.length; i++)
+        {
+          curVar = VariantList[i];
+          if (curVar.chr=="" || curVar.pos==0 || curVar.ref=="" || curVar.alt=="") continue;
+          if (typeof(VariantSorted[curVar.chr]) == "undefined")
+            VariantSorted[curVar.chr] = [];
+          if (typeof(VariantSorted[curVar.chr][curVar.pos]) == "undefined")
+            VariantSorted[curVar.chr][curVar.pos] = [];
+          if (typeof(VariantSorted[curVar.chr][curVar.pos][curVar.ref]) == "undefined")
+            VariantSorted[curVar.chr][curVar.pos][curVar.ref] = [];
+          if (typeof(VariantSorted[curVar.chr][curVar.pos][curVar.ref][curVar.alt]) == "undefined")
+            VariantSorted[curVar.chr][curVar.pos][curVar.ref][curVar.alt] = curVar;
+        }
+
+        var txtJSON = '[';
+        var firstVariant = true;
+        var chrs = Object.keys(VariantSorted);
+        for (i = 0; i < chrs.length; i++)
+        {
+          var poss = Object.keys(VariantSorted[chrs[i]]);
+          for (j = 0; j < poss.length; j++)
+          {
+            var refs = Object.keys(VariantSorted[chrs[i]][poss[j]]);
+            for (k = 0; k < refs.length; k++)
+            {
+              var alts = Object.keys(VariantSorted[chrs[i]][poss[j]][refs[k]]);
+              for (l = 0; l < alts.length; l++)
+              {
+                curVar = VariantSorted[chrs[i]][poss[j]][refs[k]][alts[l]];
+                txtJSON += (firstVariant ? '' : ',');
+                txtJSON += '{"chr":"' + curVar.chr + '","pos":' + curVar.pos + ',"ref":"' + curVar.ref + '","alt":"' + curVar.alt + '"';
+//                if (typeof(curVar.VAF) != "undefined" && curVar != null && curVar.VAF != "") txtJSON += ',"vaf":' + curVar.VAF;
+                if (typeof(curVar.Transcripts) != "undefined") txtJSON += ',"transcripts":"' + curVar.Transcripts + '"';
+                if (typeof(curVar.Proteins) != "undefined") txtJSON += ',"proteins":"' + curVar.Proteins + '"';
+                txtJSON += '}';
+                firstVariant = false;
+              }
+            }
+          }
+        }
+        txtJSON += ']';
+        
+        if (i+j+k+l > 0)
+          return txtJSON;
+        else
+        {
+          showStatus("");
+          return "";
+        }
+//      }
+//      catch (err) {
+//        showStatus("Error preparing annotation query.");
+//      }
+    }
+  </script>
+  
+  <script type="text/javascript">
+    /* Read the VariantList */
+    function loadVariants(keepVariants, txtIn)
+    {
+      var txtData;
+      try {
+        if (txtIn)
+          txtData = txtIn
+        else
+          txtData = document.getElementById('textInput').value;
+        txtData = txtData.split('\n');
+        for (var i = txtData.length-1; i >= 0; i--)
+          if (txtData[i] == "") txtData.splice(i, 1);
+        
+        // Detect column names
+        var VariantColumns = txtData[0].split(';');
+        var LastColumns = true, chrFound = false, posFound = false, refFound = false, altFound = false;
+        for (var i = VariantColumns.length-1; i >= 0; i--)
+        {
+          VariantColumns[i] = trim(VariantColumns[i]);
+          if (VariantColumns[i] != "")
+          {
+            if (VariantColumns[i] == "chr") chrFound = true;
+            else if (VariantColumns[i] == "pos") posFound = true;
+            else if (VariantColumns[i] == "ref") refFound = true;
+            else if (VariantColumns[i] == "alt") altFound = true;
+            LastColumns = false;
+          }
+          else
+          {
+            if (LastColumns)
+              VariantColumns.splice(i, 1);
+            else
+              VariantColumns[i] = "Column" + i;
+          }
+        }
+        if (!chrFound || !posFound || !refFound || !altFound)
+        {
+          showStatus("Variants not loaded. You MUST use fields 'chr', 'pos', 'ref', 'alt'. Optional: 'SampleID'.");
+          return;
+        }
+
+        var SampleNames = [];
+        var VariantSorted = [];
+        if (keepVariants)
+        {
+          // Create a normalized index of current variant list
+          var var_o, var_n;
+          for (i = 0; i < VariantList.length; i++)
+          {
+            var_o = VariantList[i];
+            var_n = []; var_n["chr"]=var_o.chr; var_n["pos"]=var_o.pos; var_n["ref"]=var_o.ref; var_n["alt"]=var_o.alt; 
+            Normalize(var_n);
+            if (typeof(VariantSorted[var_o.SampleID]) == "undefined")
+              VariantSorted[var_o.SampleID] = [];
+            if (typeof(VariantSorted[var_o.SampleID][var_n.chr]) == "undefined")
+              VariantSorted[var_o.SampleID][var_n.chr] = [];
+            if (typeof(VariantSorted[var_o.SampleID][var_n.chr][var_n.pos]) == "undefined")
+              VariantSorted[var_o.SampleID][var_n.chr][var_n.pos] = [];
+            if (typeof(VariantSorted[var_o.SampleID][var_n.chr][var_n.pos][var_n.ref]) == "undefined")
+              VariantSorted[var_o.SampleID][var_n.chr][var_n.pos][var_n.ref] = [];
+            VariantSorted[var_o.SampleID][var_n.chr][var_n.pos][var_n.ref][var_n.alt] = var_o;
+          }
+        }
+        else
+        {
+          // Reset VariantList
+          VariantList = [];
+        }
+
+        // Read variants
+        for(var i = 1; i < txtData.length; i++)
+        {
+          var curVar = [];
+          var cur = txtData[i].split(';');
+          for (var j = 0; j < Math.min(cur.length, VariantColumns.length); j++)
+          {
+            var curVal = cur[j];
+            var asFloat = parseFloat(curVal);
+            if (isNaN(asFloat) && (VariantColumns[j] == "pos")) asFloat = 0;
+            curVar[VariantColumns[j]] = (!isNaN(asFloat) && (curVal.length - asFloat.toString().length < 4) ? asFloat : curVal);
+          }
+          if (typeof(curVar.chr)=="undefined" || typeof(curVar.pos)=="undefined" || typeof(curVar.ref)=="undefined" || typeof(curVar.alt)=="undefined")
+            continue;
+
+          // Count samples
+          if (typeof(curVar.SampleID) != "undefined")
+          {
+            if (typeof(SampleNames[curVar.SampleID]) == "undefined")
+              SampleNames[curVar.SampleID] = 1;
+            else
+              SampleNames[curVar.SampleID]++;
+          }
+         
+          // Normalisation
+//          Normalize(curVar);
+
+          // Zuordnen der neuen Variante
+          var var_n, oldVar;
+          var_n = []; var_n["chr"]=curVar.chr; var_n["pos"]=curVar.pos; var_n["ref"]=curVar.ref; var_n["alt"]=curVar.alt; 
+          Normalize(var_n);
+          if (VariantSorted[curVar.SampleID] && VariantSorted[curVar.SampleID][var_n.chr] && VariantSorted[curVar.SampleID][var_n.chr][var_n.pos] && VariantSorted[curVar.SampleID][var_n.chr][var_n.pos][var_n.ref] && VariantSorted[curVar.SampleID][var_n.chr][var_n.pos][var_n.ref][var_n.alt])
+          {
+            oldVar = VariantSorted[curVar.SampleID][var_n.chr][var_n.pos][var_n.ref][var_n.alt];
+            if (typeof(oldVar) != "undefined")
+            {
+              for (j = 0; j < VariantColumns.length; j++)
+                if (VariantColumns[j] != "pos" && VariantColumns[j] != "ref" && VariantColumns[j] != "alt")
+                  oldVar[VariantColumns[j]] = curVar[VariantColumns[j]];
+            }
+            else
+              VariantList.push(curVar);
+          }
+          else
+            VariantList.push(curVar);
+        }
+       
+        AllSamples = Object.keys(SampleNames).length;
+        showStatus("Loaded.");
+
+        document.getElementById("btnDoQualityTest").disabled = false;
+        document.getElementById("btnAnnotate").disabled = false;
+        document.getElementById("btnCalculate").disabled = false;
+        document.getElementById("btnOutput").disabled = false;
+        document.getElementById("btnSave").disabled = false;
+        document.getElementById("btnSendExcel").disabled = false;
+
+        if (!excelMode || keepVariants)
+        {
+          showStatus("Rendering table...");
+          window.setTimeout(outputFunc, 20);
+        }
+      }
+      catch (err) {
+        showStatus("Error loading variant list.")
+      }
+    }
+    function loadQualities(txtIn)
+    {
+      return loadVariants(true, txtIn);
+    }    
+    
+/*    function loadVariants(txtIn)
+    {
+      var txtData;
+      try {
+        if (txtIn)
+          txtData = txtIn
+        else
+          txtData = document.getElementById('textInput').value;
+        txtData = txtData.split('\n');
+        for (var i = txtData.length-1; i >= 0; i--)
+          if (txtData[i] == "") txtData.splice(i, 1);
+        
+        // Detect column names
+        var VariantColumns = txtData[0].split(';');
+        var LastColumns = true, chrFound = false, posFound = false, refFound = false, altFound = false;
+        for (var i = VariantColumns.length-1; i >= 0; i--)
+        {
+          VariantColumns[i] = trim(VariantColumns[i]);
+          if (VariantColumns[i] != "")
+          {
+            if (VariantColumns[i] == "chr") chrFound = true;
+            else if (VariantColumns[i] == "pos") posFound = true;
+            else if (VariantColumns[i] == "ref") refFound = true;
+            else if (VariantColumns[i] == "alt") altFound = true;
+            LastColumns = false;
+          }
+          else
+          {
+            if (LastColumns)
+              VariantColumns.splice(i, 1);
+            else
+              VariantColumns[i] = "Column" + i;
+          }
+        }
+        if (!chrFound || !posFound || !refFound || !altFound)
+        {
+          showStatus("Variants not loaded. You MUST use fields 'chr', 'pos', 'ref', 'alt'. Optional: 'SampleID', 'Transcripts', 'Proteins'.");
+          return;
+        }
+
+        var SampleNames = [];
+        VariantList = new Array(txtData.length-1);
+
+        // Read variants
+        var n = 0;
+        for(var i = 1; i < txtData.length; i++)
+        {
+          var curVar = [];
+          var cur = txtData[i].split(';');
+          for (var j = 0; j < Math.min(cur.length, VariantColumns.length); j++)
+          {
+            var curVal = cur[j];
+            var asFloat = parseFloat(curVal);
+            if (isNaN(asFloat) && (VariantColumns[j] == "pos")) asFloat = 0;
+            curVar[VariantColumns[j]] = (!isNaN(asFloat) && (curVal.length - asFloat.toString().length < 4) ? asFloat : curVal);
+          }
+          if (typeof(curVar.chr)!="undefined" && typeof(curVar.pos)!="undefined" && typeof(curVar.ref)!="undefined" && typeof(curVar.alt)!="undefined")
+            VariantList[n++] = curVar;
+          else
+            continue;
+
+          // Count samples
+          if (typeof(VariantList[n-1].SampleID) != "undefined")
+          {
+            if (typeof(SampleNames[VariantList[n-1].SampleID]) == "undefined")
+              SampleNames[VariantList[n-1].SampleID] = 1;
+            else
+              SampleNames[VariantList[n-1].SampleID]++;
+          }
+         
+          // Normalisation
+//          Normalize(VariantList[n-1]);
+        }
+       
+        AllSamples = Object.keys(SampleNames).length;
+        showStatus("Loaded.");
+
+        document.getElementById("btnDoQualityTest").disabled = false;
+        document.getElementById("btnAnnotate").disabled = false;
+        document.getElementById("btnCalculate").disabled = false;
+        document.getElementById("btnOutput").disabled = false;
+        document.getElementById("btnSave").disabled = false;
+        document.getElementById("btnSendExcel").disabled = false;
+
+        if (!excelMode)
+        {
+          showStatus("Rendering table...");
+          window.setTimeout(outputFunc, 20);
+        }
+      }
+      catch (err) {
+        showStatus("Error loading variant list.")
+      }
+    } */
+    
+    /* Output VariantList as table */
+    function outputVariants()
+    {
+      try {
+        var VariantColumns = Object.keys(VariantList[0]);
+
+/*        var txtTab = "<table style='position:absolute;top:0' width=" + (123*VariantColumns.length + 18 + (typeof(VariantList[0].newResult)!="undefined" ? 28 : 0)) + "px>\n"
+        txtTab += "<thead>\n  <tr>\n";
+        var cur;
+        if (typeof(VariantList[0].newResult) != "undefined")
+          txtTab += "    <th style='width:25px; min-width:25px; max-width:25px'>Res</th>\n";
+        for (var j = 0; j < VariantColumns.length; j++)
+          txtTab += "    <th >" + VariantColumns[j] + "</th>\n";
+        txtTab += "    <th style='width:15px; min-width:15px; max-width:15px'> </th>\n";
+        txtTab += "  </tr>\n</thead>\n</table>\n";
+*/
+        var txtTab = "<table class='scroll' width=" + (123*VariantColumns.length + 18 + (typeof(VariantList[0].newResult)!="undefined" ? 28 : 0)) + "px>\n"
+        txtTab += "<thead>\n  <tr>\n";
+        var cur;
+        if (typeof(VariantList[0].newResult) != "undefined")
+          txtTab += "    <th style='width:25px; min-width:25px; max-width:25px'>Res</th>\n";
+        for (var j = 0; j < VariantColumns.length; j++)
+          txtTab += "    <th >" + VariantColumns[j] + "</th>\n";
+        txtTab += "    <th style='width:15px; min-width:15px; max-width:15px'> </th>\n";
+        txtTab += "  </tr>\n</thead>\n";
+        txtTab += "<tbody id=OutputBody>\n";
+        for (var i = 0; i < VariantList.length; i++)
+        {
+          txtTab += "  <tr>\n";
+          if (typeof(VariantList[i].newResult) != "undefined")
+            txtTab += "    <td style='width:25px; min-width:25px; max-width:25px'>" + (VariantList[i].newResult.indexOf("True")>=0 ? "T" : VariantList[i].newResult.substr(0,1)) + "</td>\n";
+          for (var j = 0; j < VariantColumns.length; j++)
+          {
+            cur = VariantList[i][VariantColumns[j]];
+            if (!isEmpty(cur))
+            {
+              if (typeof(cur) == "string")
+                cur = cur.replace(/,/g, ', <br>');
+              txtTab += "    <td>" + cur + "</td>\n";
+            }
+            else
+              txtTab += "    <td>.</td>\n";
+          }
+          txtTab += "  </tr>\n";
+        }
+        txtTab += "</tbody>\n</table>\n";
+        document.getElementById("Output").innerHTML = txtTab;
+        Resize(null);
+        showStatus("Finished. (" + VariantList.length + " variants in " + AllSamples + " samples)");
+      }
+      catch (err) {
+        showStatus("Error generating output table.");
+      }
+    }
+
+    /* Output VariantList as CSV */
+    function outputAsCSV(delim)
+    {
+      try {
+        var VariantColumns = Object.keys(VariantList[0]);
+        var txtOut = "";
+        if (!delim) delim = ";";
+//        if (typeof(VariantList[0].newResult) != "undefined")
+//          txtOut += "Res" + delim;
+        for (var j = 0; j < VariantColumns.length; j++)
+          txtOut += (j>0 ? delim : "") + VariantColumns[j];
+        for (var i = 0; i < VariantList.length; i++)
+        {
+          txtOut += "\n";
+//          if (typeof(VariantList[i].newResult) != "undefined")
+//            txtOut += (VariantList[i].newResult.indexOf("True")>=0 ? "T" : VariantList[i].newResult.substr(0,1)) + delim;
+          for (var j = 0; j < VariantColumns.length; j++)
+            txtOut += (j>0 ? delim : "") + (!isEmpty(VariantList[i][VariantColumns[j]]) ? VariantList[i][VariantColumns[j]] : "");
+        }
+        try {
+          window.external.ReceiveCSV(txtOut);
+        } catch (err) {}
+        document.getElementById("textOutput").value = txtOut;
+        if (excelMode)
+          showStatus("Finished.");
+      }
+      catch (err) {
+        showStatus("Error generating output text.");
+      }
+    }
+
+  </script>
+  
+  <script type="text/javascript">
+//    document.domain = "annoserv.uni-muenster.de"
+    function getParameter(paramName) {
+      var result = null, tmp = [];
+      var items = location.search.substr(1).split("&");
+      for (var i = 0; i < items.length; i++) {
+        tmp = items[i].split("=");
+        if (tmp[0] === paramName) result = decodeURIComponent(tmp[1]);
+      }
+      return result;
+    }
+
+    function showStatus(statTxt)
+    {
+      document.getElementById("Status").innerHTML = statTxt;
+    }
+        
+    function loadSelectedFile(inputID, loadFunc)
+    {
+      var url = document.getElementById(inputID).files[0];
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var textArea = document.getElementById("textInput");
+        textArea.value = e.target.result;
+        showStatus("Ready. (" + e.target.result.length + " bytes read)");
+        showStatus('Loading variants...');
+        setTimeout(loadFunc, 20)
+      };
+      reader.readAsText(url);
+    }
+
+    function saveFile(filename, data)
+    {
+      var blob = new Blob([data], {type: 'text/csv'});
+      if(window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        var elem = window.document.createElement('a');
+        var url = window.URL.createObjectURL(blob);
+        elem.href = url;
+        elem.download = filename;
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+        window.URL.revokeObjectURL(url);
+      }
+    }
+
+    function getQualities()
+    {
+      try {
+        var objShell = new ActiveXObject("WScript.Shell");
+        if (objShell)
+        {
+          outputAsCSV(";");
+          var fso = new ActiveXObject("Scripting.FileSystemObject");
+          var fOut = fso.CreateTextFile("QualIn.txt", true);
+          fOut.Write(document.getElementById("textOutput").value);
+          fOut.Close();
+
+          var fastaFile = prompt("Please enter the full path of the reference genome fasta file.", "Z:/Promotion/QualityTool/Homo_sapiens.GRCh37.67.dna.chromosome.all.fasta");
+          var bamDir = prompt("Please enter the folder where the bam-files reside.\nFor each SampleID there must be a <SampleID>.bam and .bai.", "S:/Analyses/Nijmegen_MDS_sequencing/MDS-Triage/Sweden_1/alignment");
+          var output = document.getElementById("textOutput");
+          output.value = "";
+
+//          objShell.Run("java QualityTool -f " + fastaFile + " -b " + bamDir + " -i QualIn.txt -o QualOut.txt", 1, true);
+          var proc = objShell.Exec("java QualityTool -f " + fastaFile + " -b " + bamDir + " -i QualIn.txt -o QualOut.txt");
+          while (proc.Status == 0)
+          {
+            if (!proc.StdOut.atEndOfStream)
+              output.value = output.value + proc.StdOut.ReadAll();
+          }
+          if (proc.Status == 1)
+          {
+//            var textQuality = proc.StdOut.ReadAll();
+            var fIn = fso.OpenTextFile("QualOut.txt", 1);
+            var textQuality = fIn.ReadAll();
+            fIn.Close();
+            document.getElementById("textInput").value = textQuality;
+            showStatus("Loading quality data..."); 
+            window.setTimeout(loadQualities, 20, textQuality);
+          }
+          else
+            showStatus('Error retrieving quality data...'); 
+        }
+      }
+      catch (err) {
+        window.alert("Save the variant list as csv, run the Quality tool, available from http://annoserv.uni-muenster.de and load the resulting csv with 'Load quality results'.");
+        document.getElementById("btnLoadAddInput").style.display="inline";
+//        document.getElementById("addInput").click();
+//        document.getElementById("btnLoadQualities").style.display="inline";
+        document.getElementById("btnDoQualityTest").style.display="none";
+        showStatus("Ready.");
+      }
+    }
+    
+    function sendToExcel()
+    {
+      try {
+        if (!objExcel)
+          objExcel = new ActiveXObject("Excel.Application");
+        if (!objSheet)
+        {
+          objSheet = new ActiveXObject("Excel.Sheet");
+          actSheet = objSheet.ActiveSheet;
+        }
+        objSheet.Application.Visible = false;
+      
+        var VariantColumns = Object.keys(VariantList[0]);
+        for (var i = -1; i < VariantList.length; i++)
+        {
+          for (var j = 0; j < VariantColumns.length; j++)
+            if (i < 0)
+              actSheet.Cells(1, j+1).Value2 = VariantColumns[j];
+            else
+              actSheet.Cells(i+2, j+1).Value2 = (!isEmpty(VariantList[i][VariantColumns[j]]) ? VariantList[i][VariantColumns[j]] : "");
+        }
+        objSheet.Application.Visible = true;
+        showStatus("Finished.");
+      }
+      catch (err) {
+        showStatus("Error sending data to Excel.");
+      }
+    }
+
+    function start()
+    {
+      outputFunc = outputVariants;
+      if (getParameter("excel") == 1)
+      {
+        excelMode = true;
+        outputFunc = outputAsCSV;
+        document.getElementById("fileInput").style.display = 'none';
+        document.getElementById("btnSave").style.display = 'none';
+        document.getElementById("btnSendExcel").style.display = 'none';
+        document.getElementById("btnDoQualityTest").style.display = 'none';
+        document.getElementById("btnAnnotate").style.display = 'none';
+        document.getElementById("btnCalculate").style.display = 'none';
+        document.getElementById("Output").style.display = 'none';
+        document.getElementById("resizer").style.display = 'none';
+        document.getElementById("GUI").style.height = '550px';
+      }
+      else if (getParameter("embed") == 1)
+      {
+        document.getElementById("fileInput").style.display = 'none';
+      }      
+      document.getElementById("btnLoad").style.display = 'none';
+      document.getElementById("btnOutput").style.display = 'none';
+      Resize(null);
+      
+      var url = getParameter("src");
+      if (url != null)
+      {
+//      var iDoc = document.getElementById("frameData");
+//      var txtData = (iDoc.contentDocument || iDoc.contentWindow.document).body.innerText;
+        showStatus('Opening source file...')
+        loadXMLDoc(url, null, function(response) {
+                   document.getElementById('textInput').value = response;
+                   showStatus('Loading variants...');
+                   setTimeout(loadVariants, 20);
+        });
+      }
+    }
+  </script>
+
+</head>
+
+<body onload="start(); showStatus('Loading filter scheme...'); loadJSON2('')">
+  <iframe id="frameJSON" name="frameJSON" src="FilterScheme.txt" style="display:none"></iframe>
+  <textarea id="textInput" name="textInput" rows=12 cols=75 style="display:none">input</textarea>
+  <textarea id="textOutput" name="textOutput" rows=12 cols=75 style="display:none">output</textarea>
+  <input type="file" id="schemeInput" name="schemeInput" style="display:none" accept=".json,.txt">
+
+  <div id="GUI" style="position:relative;width:820px;height:300px;border:2px inset black;overflow:auto;overflow-y:auto;padding:2px"></div>
+  <div id="resizer" class="resizer" style="position=relative;width:100%;height:2px;margin-top:5px;border-top:solid 1px black;border-bottom:solid 1px black;cursor:s-resize" onmousedown="initResize()"></div>
+  
+  <p>
+    <input type="file" id="fileInput" name="fileInput" accept=".csv,.txt" onChange="showStatus('Opening source file...'); setTimeout(loadSelectedFile, 20, 'fileInput', loadVariants)">
+    <button id="btnLoad" onclick="showStatus('Loading variants...'); setTimeout(loadVariants, 20)">Load</button>
+    <button id="btnDoQualityTest" disabled onclick="showStatus('Retrieving quality data...<img src=https://annoserv.uni-muenster.de/img/ajax-loader.gif>'); setTimeout(getQualities, 20)">Quality analysis</button>
+    <button id="btnLoadAddInput" style="display:none" onclick="document.getElementById('addInput').click()">Load quality results</button>
+    <input type="file" id="addInput" name="addInput" style="display:none" accept=".csv,.txt" onChange="showStatus('Opening qualities file...'); setTimeout(loadSelectedFile, 20, 'addInput', loadQualities)">
+    <button id="btnAnnotate" disabled onclick="showStatus('Retrieving annotation data...<img src=https://annoserv.uni-muenster.de/img/ajax-loader.gif>'); loadXMLDoc('https://annoserv.uni-muenster.de/annopost.php', createRequest(), parseAnno)">Annotate</button>
+    <button id="btnCalculate" disabled onclick="showStatus('Calculating...'); setTimeout(applyFilters2, 20)">Calculate</button>
+    <button id="btnOutput" disabled onclick="showStatus('Creating output...'); setTimeout(outputAsCSV, 20)">Output</button>
+    <button id="btnSave" disabled onclick="outputAsCSV(';'); saveFile('Output.csv', document.getElementById('textOutput').value)">Save...</button>
+    <button id="btnSendExcel" disabled onclick="showStatus('Sending data...'); setTimeout(sendToExcel, 20)">SendToExcel</button>
+    <span id="Status">Starting application...</span>
+  </p>
+  
+  <div id="Output" style="position:relative;width=99%;height:300px;border:1px inset black;overflow-x:auto;overflow-y:hide"></div>
+</body>
+</html>

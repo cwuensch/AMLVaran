@@ -1,0 +1,237 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+
+
+/* Padding below the footer and lighter body text */
+
+$color1: #5d62a0;
+$color1-pale: #8287bc;
+$color1-pale2: #CFCFD8;
+$color2: #D1BAB6;
+$color3: #fff9f8;
+$color3-dark: #f2f0ef;
+$color4: #e2dfde;
+$color5: #27282b;
+$color5-pale: #61636b;
+$bordercolor: #bbbbbb;
+$coloredvariant1: #de8181;
+$coloredvariant2: #e3a985;
+$coloredvariant3: #fae3bc;
+$mutationsfound: #c61213;
+$badcovered: #dbab21;
+$nomutations: #43ae44;
+//$mutationsfound: #8287bc;
+//$badcovered: #444;
+//$nomutations: #fff;
+
+table { page-break-inside:avoid; }
+div   { page-break-inside:avoid; } /* This is the key */
+thead { display:table-header-group }
+tfoot { display:table-footer-group }
+
+.reporttable {
+    font-family: 'Arial';
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    border: 1px solid $bordercolor;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+
+.reporttable > tbody > tr > td {
+    background-color: #f3f3f3;
+    //border: 1px solid $bordercolor;
+}
+
+.firstcolumn {
+    width: 180px;
+    border: 1px solid $bordercolor;
+    vertical-align: top;
+    padding: 0px;
+}
+
+.firstcolumnpdf {
+    width: 180px;
+}
+
+.reporttableheadline {
+    padding: 5px;
+    font-weight: bold;
+    background-color: $color1-pale2;
+}
+
+.reporttablecontent {
+    padding: 5px;
+    padding-bottom: 15px;
+}
+
+.mutationsfound {
+    background-color: $mutationsfound;
+    color: $mutationsfound;
+}
+
+.badcovered {
+    background-color: $badcovered;
+    color: $badcovered;
+}
+
+.nomutations {
+    background-color: $nomutations;
+    color: $nomutations;
+}
+
+.glyphsmallbutton {
+    font-size: 20px;
+    cursor: pointer;
+    color: $color1;
+    opacity: 0.6;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+//-----------OVERVIEW
+
+.overview {
+    padding: 12px 0px;
+}
+
+.hotspotsbox {
+    font-family: 'Arial';
+    width: 180px;
+    height: 40px;
+    color: black;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    margin-left: 1px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid $bordercolor;
+
+}
+
+.hotspotsboxinside {
+    font-family: 'Arial';
+    width: 100%;
+    height: 40px;
+    color: black;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid $bordercolor;
+}
+
+.hotspotsboxactive {
+    border: 3px solid $color1;
+}
+
+//-----------HEADLINES
+
+.head1 {
+    font-size: 24px;
+    color: black;
+    margin: 0px;
+}
+
+.head2 {
+    font-size: 16px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.head1pdf {
+    font-size: 24px;
+    color: black;
+    margin: 50px 0px 0px;
+}
+
+.head2pdf {
+    font-size: 16px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.head3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: $color1;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.head4 {
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+//-----------CIRCLES
+
+.smallcircle {
+	border-radius: 50%;
+	width: 18px;
+	height: 18px;
+    border: 1px solid $bordercolor;
+}
+
+.circle {
+	border-radius: 50%;
+	width: 70px;
+	height: 70px;
+	margin: auto;
+    border: 1px solid $bordercolor;
+}
+
+.circlelabel {
+    background-color: transparent;
+    font-size: 9px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+//-----------VARIANTS TABLE
+
+.variantstable {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.variantstable > tbody {
+    vertical-align: top;
+}
+
+.variantstable > tbody > tr > td, .variantstable > thead > tr > th {
+    font-family: 'Arial';
+    background-color: $color3;
+    border: 1px solid $bordercolor;
+    padding: 0px 7px 0px;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.tablepdf > tbody > tr > td, .tablepdf > thead > tr > th {
+    font-size: 8pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+//-----------PDF WRAPPER
+.pdfwrapper {
+    font-size: 10pt;
+}
+
+//-----------DIAGNOSIS
+
+.diagnosispanel {
+    width: 800px;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 10px;
+    border: 1px solid $bordercolor;
+}

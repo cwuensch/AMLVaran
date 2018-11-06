@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>VariantAnnotator</title>
+    <style>
+      * { font-family: Arial, Helvetica, sans-serif; }
+      h1 { font-weight: bold; }
+      p, ol { font-size: 11pt; line-height: 1.5em }
+      ul { font-size: 10pt; line-height: 1.5em }
+      img { border: 0px }
+    </style>
+
+  </head>
+  <body>
+    <div>
+      <a href="https://www.medizin.uni-muenster.de/imi/das-institut/"><img src="img/imi-logo-90.png" alt="Institute of Medical Informatics"></a>
+      <span style="position:absolute; right:0"><a href="https://www.uni-muenster.de"><img src="img/logo-wwu.svg" alt="Westf&auml;lische Wilhelms-Universit&auml;t M&uuml;nster (WWU)" width="227" height="77"></a></span>
+    </div>
+    <hr>
+
+    <h1>VariantAnnotator</h1>
+    <p>We provide a tool for automated annotation and score calculation for human genetic variants.<br>
+    <p>It is available as
+      <ol>
+        <li><a href="app/Annotator.html" onclick="window.open(this.href, '_blank', 'width=1024,height=720,resizable=1,menubar=0,toolbar=0');return false;">Online tool</a></li>
+        <li><a href="download/Annotator_win.zip">Standalone application for Windows</a></li>
+        <li><a href="download/Installer.exe">Add-in for Microsoft Excel (Windows)</a> *<br><small>* File has been tested negative with <a href="https://www.virustotal.com/de/url/90866afcee72de128cffa25e0811b59536354f32b2df9a8593d721207e1894a4/analysis/1533044318/">67 virus scanners</a>. Microsoft Smart Screen just complains because it is seldomly downloaded. Please ignore this.</small></li>
+        <li><a href="download/Annotator_all.zip">Browser-based app for all operating systems</a></li>
+        <li>REST-based API: <a href="annoget.php">get<a> <a href="annopost.php">post</a></li>
+        <li><a href="download/Annotator_R.zip">R-class with usage example</a></li>
+      </ol>
+    </p>
+    <p>There is also an interactive Excel-Tool to generate the FilterScheme available <a href="download/FilterSchemeCreator.xls">here</a>.</p>
+
+    <p><br><b>Documentation:</b><br>
+      For using the software, it is critical, that your variant table has columns named <i>"chr", "pos", "ref", "alt"</i> and (optionally) <i>"SampleID"</i>. They <u>must</u> be named this way (case-sensititve).<br>
+      <u>For Standalone tool:</u><br>
+      - Start the online tool OR download and extract(!) the zip-file to a folder on your PC, then start the Annotator app<br>
+      - Load a variant list (as csv file), by selecting the file. It should be displayed in table form afterwards.<br>
+      <u>For Excel add-in:</u><br>      
+      - Install the Excel add-in (Windows only, administrator privileges needed)<br>
+      - Open a variant list in Excel<br>
+      - Click on "Variant Annotator", then "Show variant annotation form" to start the app.<br>
+      <u>For R:</u><br>
+      - Just download the R file and look at the usage example at the end of the Annotator.R file.<br>      
+      <u>Usage:</u><br>  
+      - Click on "Annotate" button to retrieve comprehensive annotation information for your variants (currently GrCh37 only).<br>
+      - Click on "Quality Analysis" button to calculate the read counts for each variant from the source bam file. The bam-files must be named like &lt;SampleID&gt;.bam and be placed together in a single folder. Also a reference genome (fasta file) is needed for this purpose.<br>
+      Integrated quality analysis works only, if you are using (a) Excel add-in or (b) Windows standalone app or (c) Microsoft Internet Explorer with ActiveX enabled. If not, use the included QualityTool manually (java QualityTool) on your csv list.</br>
+      - Click on "Load filter scheme" to load your own custom filter scheme or "Calculate scores" to apply the filters and calculate Artifact and Polymorhphism scores for each variant. 
+    </p>
+
+    <p><br><b>Annotation example:</b><br>
+      <a href="img/annotations.gif"><img src="img/annotations.gif" width="1000px" alt="Click to enlarge"></a>
+    </p>
+    <p><b>Filter scheme:</b><br>
+      <a href="img/filterscheme.gif"><img src="img/filterscheme.gif" width="622px" alt="Click to enlarge"></a>
+    </p>
+
+    <p><br><b>Currently used databases:</b>
+      <ul>
+        <li>dbSNP, v150 (2017-04-03)  - Entries with version &leq; 129 will be considered as polymorphisms.</li>
+        <li>ClinVar clinical variant database, v150 (2017-12-31)</li> <!-- (2017-01-04) -->
+        <li>COSMIC*: Catalogue of Somatic Mutations in Cancer, v83 (2017-11-07)</li> <!-- v79 (2016-11-14) -->
+        <li>1000 Genomes Project alternative allele frequency data for autosomes (ALL, EURopean), collection v5b (Aug 2015)</li>
+        <li>ExAC 65000 exome allele frequency data for ALL and NFE (Non-finnish European), v0.3 (2015-11-29)</li>
+        <li>ESP6500 alternative allele frequency in All subjects in the NHLBI-ESP project with 6500 exomes (2014-12-22)</li>
+        <li>PROVEAN scores (v1.1) on all possible single AA substitutions and deletions in human proteins from Ensembl 66</li>
+        <li>dbNSFP v3.5 (2017-08-06)<br><small>(Liu X, Jian X, and Boerwinkle E. 2011. dbNSFP: a lightweight database of human non-synonymous SNPs and their functional predictions. Human Mutation. 32:894-899. <br> Liu X, Wu C, Li C and Boerwinkle E. 2016. dbNSFP v3.0: A One-Stop Database of Functional Predictions and Annotations for Human Non-synonymous and Splice Site SNVs. Human Mutation. 37:235-241. [preprint])</small></li>
+        <li>Transcripts and Exons from GRCh37, Ensembl Release 75 (Mar 2014).</li>
+      </ul>
+      <small>*COSMIC data currently cannot be offered due to license restrictions by the authors.</small> 
+    </p>
+    <p><br><b>Authors:</b><br>
+      Concept, generic filter scheme, annotation server, databases, annotation & filtering tools, QualityTool wrapper and Excel add-in were developed by <a href="mailto:christian.wuensch@ukmuenster.de">Christian W&uuml;nsch</a>.<br>
+      Please send questions and remarks via email to the above author.<br>
+      Default variant filtering scheme (<i>appreci8</i>) was develeped by <a href="mailto:sarah.sandmann@ukmuenster.de">Sarah Sandmann</a> and adapted by Christian W&uuml;nsch.<br>
+      Quality analysis (read count detection) is performed with <i>BamEvaluator</i> by Michael Fujarski which is included in the installation package.
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <div style="width:100%; position:fixed; bottom:0; background-color:white;">
+      <hr>
+      <p>&copy; 2018 Institute of Medical Informatics, West&auml;lische Wilhelms-Universit&auml;t M&uuml;nster
+      <span style="position:absolute; right:0"><a href="imprint.html">Impressum</a> <a href="disclaimer.html">Disclaimer</a> <a href="datenschutz.html">Datenschutz</a></span></p>
+    </div>
+  </body>
+</html>
+

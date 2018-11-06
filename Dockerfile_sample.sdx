@@ -1,0 +1,54 @@
+FROM debian:jessie-backports
+
+LABEL maintainer "sarah.sandmann@uni-muenster.de"
+LABEL version="1.0"
+
+# R repo
+RUN apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+RUN echo "deb http://cran.uni-muenster.de/bin/linux/debian jessie-cran34/" > /etc/apt/sources.list.d/r.list
+
+
+# Installing dependencies
+RUN apt-get -q update && apt-get upgrade -yqq
+RUN apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get install -y python2.7\
+  openjdk-7-jre\
+  ncbi-blast+\
+  r-base\
+  libhts-dev\
+  libxml2-dev\
+  libcurl4-openssl-dev\
+  libssl-dev\
+  libmariadb-client-lgpl-dev
+
+# R dependencies
+COPY install.R install.R
+RUN chmod +x install.R
+RUN ./install.R
+RUN rm install.R
+
+# Copy dependencies
+WORKDIR /
+COPY dependencies dependencies
+
+# samtools
+RUN cp /dependencies/samtools-1.3/samtools /usr/bin
+RUN chmod +x /usr/bin/samtools
+
+# Copy scripts
+COPY Scripte scripts
+COPY Config.sh scripts/Config.sh
+RUN chmod +x /scripts/*
+
+# provean special
+WORKDIR /dependencies/cdhit-master/
+RUN make
+RUN make install
+WORKDIR /dependencies/provean/
+RUN ./configure
+RUN make
+RUN make install
+
+# Entrypoint for future releases
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]
+

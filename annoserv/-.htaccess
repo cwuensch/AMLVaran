@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "VariantAnnotator"
+AuthUserFile /var/www/.htusers
+require valid-user

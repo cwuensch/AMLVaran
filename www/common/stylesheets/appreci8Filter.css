@@ -1,0 +1,96 @@
+.form-control {
+    display: inline-block;
+    padding: 0px 5px;
+    height: 22px;
+    width: 60px;
+    vertical-align: top;
+}
+
+.filter-block {
+    margin-bottom: 20px;
+    width: 800px;
+}
+
+.filter-block > div {
+    vertical-align: top;
+}
+
+.filter-category {
+    margin-bottom: 3px;
+}
+
+.filter-entry {
+    padding-left: 20px;
+    vertical-align: top;
+}
+
+.filter-entry > span {
+    vertical-align: top;
+}
+
+.filter-subentry {
+    padding-left: 20px;
+    display: block;
+    vertical-align: top;
+}
+
+.filter-subentry > span {
+    vertical-align: top;
+}
+
+.filter-caption {
+    width: 85%;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.filter-scores {
+    display: inline-block;
+    float: right;
+}
+
+.filter-scores > a {
+    text-decoration: none;
+}
+
+.filter-artiscore {
+    display: inline-block;
+    width: 35px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: darkseagreen;
+    color: white;
+    text-align: center;
+}
+
+.filter-polyscore {
+    display: inline-block;
+    margin-left: 10px;
+    width: 35px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: skyblue;
+    color: white;
+    text-align: center;
+}
+
+
+.filters {
+    width: 825px;
+    height: 88.3%;
+    overflow-y: auto;
+}
+
+.filter-buttons {
+    width: 800px;
+    bottom: 0;
+    margin: 0px;
+    padding: 3px 0px 4px 0px;
+    background-color: white;
+    text-align: right;
+}
+
+.filter-block {
+    margin-bottom: 20px;
+    width: 800px;
+}
