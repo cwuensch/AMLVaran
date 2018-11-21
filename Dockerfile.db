@@ -1,0 +1,14 @@
+FROM mysql
+
+LABEL maintainer=christian.wuensch@ukmuenster.de
+LABEL version=1.0
+
+WORKDIR ~
+ADD https://amlvaran.uni-muenster.de/SQLdump/DBstruct.sql DBstruct.sql
+ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata_pre.sql DBdata_pre.sql
+ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata.sql.gz DBdata.sql.gz
+RUN unzip DBdata.sql.gz
+
+RUN mysql < DBstruct.sql
+RUN mysql < DBdata_pre.sql
+RUN mysql < DBdata.sql
