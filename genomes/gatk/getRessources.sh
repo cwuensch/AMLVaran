@@ -1,1 +1,1 @@
-wget -O- https://amlvaran.uni-muenster.de/Ressources/GATK_ressources.tar.gz | tar -xz
+wget -O- https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz | tar -xz

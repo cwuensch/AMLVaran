@@ -7,8 +7,7 @@ LABEL version=1.0
 RUN apt-get -q update && apt-get -q upgrade -yqq
 
 # Install libs
-RUN apt-get -q update && apt-get install -y \
-  bzip2
+RUN apt-get -q update && apt-get install -y bzip2
 #  python2.7 openjdk-8-jre-headless 
 
 # Install Conda
@@ -44,9 +43,9 @@ RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
 
 # Install SNVer (not in bioconda)
 ADD https://downloads.sourceforge.net/project/snver/SNVer-0.5.3.tar.gz /opt/miniconda/opt/SNVer-0.5.3/
-COPY downloads/variant_caller/SNVer/SNVerIndividual.sh /opt/miniconda/opt/SNVer-0.5.3/
+COPY SNVerIndividual.sh /opt/miniconda/opt/SNVer-0.5.3/
 WORKDIR /opt/miniconda/opt/SNVer-0.5.3
-RUN tar -xf SNVer-0.5.3.tar.gz
+RUN tar -xzf SNVer-0.5.3.tar.gz
 RUN rm SNVer-0.5.3.tar.gz
 RUN ln -s /opt/miniconda/opt/SNVer-0.5.3/SNVerIndividual.sh /opt/miniconda/bin/SNVerIndividual
 RUN chmod 755 /opt/miniconda/bin/SNVerIndividual
@@ -54,23 +53,27 @@ RUN chmod 755 /opt/miniconda/bin/SNVerIndividual
 # Install PROVEAN (optional)
 RUN conda install cd-hit blast
 ADD https://amlvaran.uni-muenster.de/Reference/Provean_compiled.tar.gz /opt/Provean/
+WORKDIR /opt/Provean
+RUN tar -xzf Provean_compiled.tar.gz
+RUN rm Provean_compiled.tar.gz
 RUN ln -s /opt/Provean/provean /usr/local/bin
 RUN ln -s /opt/Provean/provean.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/provean
+RUN chmod 755 /usr/local/bin/provean.sh
 
 # Get pipeline code from Git
 WORKDIR /var
 COPY pipeline /var/pipeline/
 
 # Get reference genome
-#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/Homo_sapiens.GRCh37.67/
-#WORKDIR /var/genomes/Homo_sapiens.GRCh37.67
-#RUN tar -xf Homo_sapiens.GRCh37.67.tar.gz
+#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
+#WORKDIR /var/genomes
+#RUN tar -xzf Homo_sapiens.GRCh37.67.tar.gz
 #RUN rm Homo_sapiens.GRCh37.67.tar.gz
 
 # Get GATK ressources
-#ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/Homo_sapiens.GRCh37.67/
-#WORKDIR /var/genomes/Homo_sapiens.GRCh37.67
-#RUN tar -xf GATK_ressources.tar.gz
+#ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
+#WORKDIR /var/genomes/gatk
+#RUN tar -xzf GATK_ressources.tar.gz
 #RUN rm GATK_ressources.tar.gz
 
