@@ -1,0 +1,4 @@
+genomes/Homo_sapiens.*
+genomes/gatk
+genomes/blast
+samples

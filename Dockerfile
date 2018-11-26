@@ -7,8 +7,10 @@ LABEL version=1.0
 RUN apt-get -q update && apt-get -q upgrade -yqq
 
 # Install libs
-RUN apt-get -q update && apt-get install -y bzip2
-#  python2.7 openjdk-8-jre-headless 
+RUN apt-get -q update && apt-get install -y \
+  bzip2 parallel mysql-client
+#  python2.7 python-mysqldb
+#  openjdk-8-jre-headless 
 
 # Install Conda
 WORKDIR ~
@@ -22,9 +24,12 @@ RUN conda config --add channels conda-forge && \
   conda config --add channels bioconda && \
   conda config --add channels https://conda.binstar.org/bpeng
 RUN conda install \
+  mysql-python \
+  scipy \
   samtools=1.3 \
   variant_tools=2.7.0 \
   vcftools=0.1.* \
+  bcftools \
   snpeff=4.2 \
   bam-readcount \
   bwa=0.7.12 \
@@ -62,8 +67,17 @@ RUN chmod 755 /usr/local/bin/provean
 RUN chmod 755 /usr/local/bin/provean.sh
 
 # Get pipeline code from Git
-WORKDIR /var
 COPY pipeline /var/pipeline/
+WORKDIR /var/pipeline
+RUN chmod 755 *.sh *.py Callers/*.sh
+
+# Set environment variables for mounted volumes
+ENV SAMPLEDIR=/var/samples
+ENV GENOME=/var/genomes/Homo_sapiens.GRCh37.67.fasta
+ENV GATK_RES=/var/genomes/gatk
+ENV BLAST_DB=/var/genomes/blast
+RUN vtools --version
+RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
 
 # Get reference genome
 #ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/

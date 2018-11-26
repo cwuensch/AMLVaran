@@ -38,7 +38,7 @@ if len(sys.argv) > 2:
     InputFile = sys.argv[2]
     SampleID = sys.argv[1]
 else:
-    print "Usage: python " + sys.argv[0] + " <SampleID> <INPUT.vcf>"
+    print "Usage: python " + sys.argv[0] + " <SampleID> <INPUT.vcf> <REFERENCE.fasta>"
     sys.exit(-1)
 
 print "Annotation of SampleID " + SampleID + " from file " + InputFile + "...\n"
@@ -59,7 +59,7 @@ con.autocommit(False)
 print ("STEP 1: Annotation")
 
 # Launch the SNPeff tool
-return_code = subprocess.call("java -jar -Xmx4g -XX:-UseGCOverheadLimit " + os.environ["snpeff"] + " -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
+return_code = subprocess.call("snpeff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
 if (return_code != 0):  sys.exit(11)
 
 # Open input file (SNPeff annotated raw variants)
@@ -215,7 +215,7 @@ if os.path.isfile("./Sample.bam"):
     tempFile.close()
     
     # Launch BamReadCount tool
-    return_code = subprocess.call(os.environ["bam_readcount"] + " --reference-fasta " + os.environ["genome"] + " --site-list ./Variant_pos.csv ./Sample.bam > ./Variant_quals.csv 2>/dev/null", shell=True)
+    return_code = subprocess.call("bam_readcount --reference-fasta " + os.environ['GENOME'] + " --site-list ./Variant_pos.csv ./Sample.bam > ./Variant_quals.csv 2>/dev/null", shell=True)
     if (return_code != 0):  sys.exit(12)
     
     # Process the output of BamReadCount
@@ -372,11 +372,11 @@ for var in Variants:
                                 row = cur.fetchone()
                                 if (row[0] != ""):  SIFT = float(row[0])
                     else:
-#                        return_code = subprocess.call("mysql --host=genome-mysql.cse.ucsc.edu --user=genome --password= --database=hg19 --no-auto-rehash --skip-column-names -e 'SELECT seq from ensPep WHERE name=\"" + var.Transcript[i] + "\"' > CurSeq.fasta", shell=True)
+#                        return_code = subprocess.call("mysql --host=genome-mysql.cse.ucsc.edu --user=genome --password= --database=hg19 --no-auto-rehash --skip-column-names -e 'SELECT seq from ensPep WHERE name=\"" + var.Transcript[i] + "\"' > /tmp/CurSeq.pep", shell=True)
                         tempFile = open('/tmp/CurVar.var', 'w')
                         tempFile.write ("%s\n" % prot)
                         tempFile.close()
-#                        return_code = subprocess.call("provean.sh -q " + os.environ["peptides"] + var.Transcript[i] + ".pep -v /tmp/CurVar.var > ./Provean_out.txt", shell=True)
+#                        return_code = subprocess.call("provean.sh -q /tmp/CurSeq.pep -v /tmp/CurVar.var > ./Provean_out.txt", shell=True)
 #                        with open('./Provean_out.txt', 'r') as tempFile:
 #                            for line in tempFile:
 #                                if (line[:len(prot)] == prot):

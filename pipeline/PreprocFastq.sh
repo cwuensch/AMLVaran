@@ -1,8 +1,5 @@
 #!/bin/bash
 
-scripts="$( dirname "$0" )"
-source "$scripts/Config.sh"
-
 #if [ ! -f "val_R1.fastq" ] || [ ! -f "val_R2.fastq" ]; then
   # First Merge reads
   if [ ! -f "R1.fastq" ] || [ ! -f "R2.fastq" ]; then
@@ -12,7 +9,7 @@ source "$scripts/Config.sh"
 
   # Then Trimming
   ADAPTER=AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAG
-  $trimgalore --path_to_cutadapt $cutadapt --paired -a $ADAPTER R1.fastq R2.fastq 2> log/A1_trim.log
+  trimgalore --path_to_cutadapt cutadapt --paired -a $ADAPTER R1.fastq R2.fastq 2> log/A1_trim.log
 
   if [ $? -ne 0 ]; then
     exit 1

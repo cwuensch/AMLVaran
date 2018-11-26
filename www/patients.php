@@ -79,19 +79,19 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSI
                             </div>
                             <div class="modal-body" id="NewPatientModalContent">
                                 <div class="form-group">
-                                    <label for="NewPatientname">Patient Name</label>
+                                    <label for="NewPatientname">Name (pseudoym)</label>
                                     <input type="text" id="NewPatientname" class="form-control" maxlength="50" />
                                 </div>
                                 <div class="alert alert-danger" role="alert" id="NewPatientnameError" style="display:none;">
                                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                    <span class="sr-only">Error:</span> Patient Name is a required field!
+                                    <span class="sr-only">Error:</span> Name (pseudonym) is a required field!
                                 </div>
                                 <div class="form-group">
-                                    <label for="NewPatientnumber">Patient Number</label>
+                                    <label for="NewPatientnumber">Patient Number *</label>
                                     <input type="text" id="NewPatientnumber" class="form-control" maxlength="50" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="NewBirthdate">Birth Date</label>
+                                    <label for="NewBirthdate">Birth Date *</label>
                                     <input class="form-control dateinput" id="NewBirthdate" placeholder="yyyy-mm-dd" />
                                 </div>
                                 <div class="alert alert-danger" role="alert" id="NewBirthdateError" style="display:none;">
@@ -99,7 +99,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSI
                                     <span class="sr-only">Error:</span> Invalid Date-Format
                                 </div>
                                 <div class="form-group">
-                                    <label for="NewSex">Sex</label>
+                                    <label for="NewSex">Sex *</label>
                                     <select id="NewSex" class="form-control">
                                         <option>Unknown</option>
                                         <option>Male</option>

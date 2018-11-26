@@ -1,7 +1,6 @@
 #!/bin/bash
 MYIP="$( /sbin/ifconfig eth0 | grep 'inet Adresse' | cut -d: -f2 | awk '{print $1}' )"
 SCRIPTS="$( dirname "$0" )"
-source "$SCRIPTS/Config.sh"
 
 while [ 1 ]
 do
