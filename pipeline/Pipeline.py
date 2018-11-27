@@ -8,6 +8,7 @@
 
 import csv
 import MySQLdb
+from ConfigParser import RawConfigParser
 import sys
 import subprocess
 import os
@@ -47,8 +48,16 @@ num_lines2 = sum(1 for line in open(InputFile))
 protocol = "Sample" + SampleID + "\t" + str(num_lines1) + "\t" + str(num_lines2-1)
 
 
+# Read MySQL-defaults
+cfgParser = ConfigParser.RawConfigParser()
+cfgParser.read("~/.my.cfg")
+DBhost=cfgParser.get("client", "host")
+DBuser=cfgParser.get("client", "user")
+DBpassword=cfgParser.get("client", "password")
+DBdatabase=cfgParser.get("client", "database")
+
 # Database connection
-con = MySQLdb.connect('amlvaran', 'amlvaran', '', 'amlvaran')
+con = MySQLdb.connect(DBhost, DBuser, DBpassword, DBdatabase)
 cur = con.cursor()
 con.autocommit(False)
 

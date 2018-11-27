@@ -8,6 +8,7 @@
 
 import csv
 import MySQLdb
+from ConfigParser import RawConfigParser
 import sys
 
 print "ImportCoverage 1.0"
@@ -29,8 +30,16 @@ i = 0
 f = open(InputFile, 'r')
 csvReader = csv.reader(f, delimiter='\t', quotechar='"')
 
+# Read MySQL-defaults
+cfgParser = ConfigParser.RawConfigParser()
+cfgParser.read("~/.my.cfg")
+DBhost=cfgParser.get("client", "host")
+DBuser=cfgParser.get("client", "user")
+DBpassword=cfgParser.get("client", "password")
+DBdatabase=cfgParser.get("client", "database")
+
 # Write to MySQL-DB
-con = MySQLdb.connect('amlvaran', 'amlvaran', '', 'amlvaran')
+con = MySQLdb.connect(DBhost, DBuser, DBpassword, DBdatabase)
 cur = con.cursor()
 
 try:

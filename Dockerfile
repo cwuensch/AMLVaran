@@ -79,15 +79,26 @@ ENV BLAST_DB=/var/genomes/blast
 RUN vtools --version
 RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
 
-# Get reference genome
+# Set MySQL access data
+RUN echo "[client]" > /root/.my.cnf
+RUN echo "host=amlvaran.uni-muenster.de" >> /root/.my.cnf
+RUN echo "user=amlvaran" >> /root/.my.cnf
+RUN echo "password=***" >> /root/.my.cnf
+RUN echo "database=amlvaran" >> /root/.my.cnf
+
+
+# Get reference genome [required, but should be mounted instead]
 #ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
+#ADD https://bioinformatics.mdanderson.org/Software/VariantTools/repository/reference/hg19.crr /var/genomes/
 #WORKDIR /var/genomes
 #RUN tar -xzf Homo_sapiens.GRCh37.67.tar.gz
 #RUN rm Homo_sapiens.GRCh37.67.tar.gz
+#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
 
-# Get GATK ressources
+# Get GATK ressources [optional, but should be mounted instead]
 #ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
 #WORKDIR /var/genomes/gatk
 #RUN tar -xzf GATK_ressources.tar.gz
 #RUN rm GATK_ressources.tar.gz
 
+# Get BlastDB ressources [optional, but should be mounted instead]
