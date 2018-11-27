@@ -14,8 +14,8 @@ if [ ! -f nr.05.psq ]; then
 fi
 
 cd ../..
-#docker build -f Dockerfile.db -t amlvaran/db .
-#docker build -f Dockerfile.www -t amlvaran/www .
+#docker build -f Dockerfile_db -t amlvaran/db .
+#docker build -f Dockerfile_www -t amlvaran/www .
 #docker build -f Dockerfile -t amlvaran/worker .
 
 docker run --rm -t amlvaran/db

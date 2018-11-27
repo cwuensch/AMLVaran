@@ -119,12 +119,27 @@ tfoot {
   color: #5d62a0;
   text-align: center;
   margin-top: 20px;
-  margin-bottom: 50px; }
+  margin-bottom: 40px; }
 
 .head4 {
   font-size: 18px;
   margin-top: 10px;
   margin-bottom: 10px; }
+
+.warning {
+  font-size: 15px;
+  color: #a00000;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px; }
+}
+.warningpdf {
+  font-size: 18px;
+  color: #a00000;
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 50px; }
+}
 
 .smallcircle {
   border-radius: 50%;

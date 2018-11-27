@@ -86,7 +86,8 @@ if(isset($rows)){
       <title>AML VARAN | <?php echo $pageTitle ?></title>
       <link href="/var/amlvaran/www/common/stylesheets/reportstylesheet.css" rel="stylesheet"/>
     </head>
-    <p class="head3">Clinical Variant Report</p>';
+    <p class="head3">Clinical Variant Report</p>
+    <p class="warningpdf">This is not a medical product. Use only for research purposes!</p>';
 
     if($pdf == true) {
         if(isset($metadata)) {
