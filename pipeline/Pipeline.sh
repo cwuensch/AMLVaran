@@ -158,10 +158,6 @@ if [ $STATE -lt 60 ] ; then
     vcftools --vcf ./Variants_raw.vcf --bed $BEDFILE --recode --recode-INFO-all --out ./Variants_raw
   fi
 
-#  echo "##fileformat=VCFv4.1" > Variants.vcf
-#  cat Variants_SNPeff.vcf >> Variants.vcf
-  ln Variants_SNPeff.vcf Variants.vcf
-
   STATE="60"
   mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
 fi
@@ -173,8 +169,10 @@ fi
 if [ $STATE -lt 80 ] ; then
   # Process output with Python
   echo "[Run Annotation and Import pipeline]"
-  export snpeff bam_readcount genome peptides
+  export GENOME
   python $SCRIPT_DIR/Pipeline.py $SAMPLEID ./Variants_raw.recode.vcf
+
+  ln Variants_SNPeff.vcf Variants.vcf
 
   STATE="80"
   mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
