@@ -15,9 +15,9 @@ fi
 
 cd ../..
 #docker build -f Dockerfile_db -t amlvaran/db .
-#docker build -f Dockerfile_www -t amlvaran/www .
+#docker build -f Dockerfile_web -t amlvaran/web .
 #docker build -f Dockerfile -t amlvaran/worker .
 
 docker run --rm -t amlvaran/db
 docker run --rm -v /media/watson/projects/christian/amlvaran/samples:/var/samples -v /media/watson/projects/christian/amlvaran/genomes:/var/genomes -t amlvaran/worker
-docker run --rm -v /media/watson/projects/christian/amlvaran/samples:/var/samples -t amlvaran/www
+docker run --rm -v /media/watson/projects/christian/amlvaran/samples:/var/samples -t amlvaran/web

@@ -1,0 +1,15 @@
+FROM apache
+
+LABEL maintainer=christian.wuensch@ukmuenster.de
+LABEL version=1.0
+
+WORKDIR ~
+COPY www /var/
+
+# Database configuration
+RUN echo "<?php" > /var/www/inc/constants.inc.php
+RUN echo "    define('DB_HOST', 'localhost');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_USER', 'amlvaran');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_PASS', '');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_NAME', 'amlvaran');" >> /var/www/inc/constants.inc.php
+RUN echo "?>" >> /var/www/inc/constants.inc.php

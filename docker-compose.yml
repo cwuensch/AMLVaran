@@ -1,0 +1,28 @@
+version: '1'
+services:
+  amlvaran_db:
+    build:
+      context: .
+      dockerfile: Dockerfile_db
+    ports:
+    - "3306:3306"
+    args:
+
+  amlvaran_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./samples:/var/samples
+    - ./genomes:/var/genomes
+    
+  amlvaran_web:
+    build:
+      context: .
+      dockerfile: Dockerfile_web
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./samples:/var/samples
+    
