@@ -7,7 +7,7 @@ mkdir -p $dir/SNVer
 
 echo "Processing sample ${sample} with SNVer"
 if [ ! -f $dir/SNVer/${sample}.filter.vcf ] && [ ! -f $dir/SNVer/${sample}.indel.filter.vcf ] ; then
-  SNVerIndividual -i $dir/${sample}.bam -r $GENOME -b 0.01 -o $dir/SNVer/${sample}
+  snver -i $dir/${sample}.bam -r $GENOME -b 0.01 -o $dir/SNVer/${sample}
   if [ $? -ne 0 ]; then
     echo "Error SNVer"
     rm $dir/SNVer/${sample}.failed.log $dir/SNVer/${sample}.raw.vcf  $dir/SNVer/${sample}.indel.raw.vcf $dir/SNVer/${sample}.filter.vcf $dir/SNVer/${sample}.indel.filter.vcf

@@ -1,17 +1,26 @@
-version: '1'
+version: '2'
 services:
   amlvaran_db:
     build:
       context: .
       dockerfile: Dockerfile_db
-    ports:
-    - "3306:3306"
-    args:
+    restart: always
+    environment:
+    - MYSQL_RANDOM_ROOT_PASSWORD: yes
+    - MYSQL_DATABASE
+    - MYSQL_USER
+    - MYSQL_PASSWORD
 
   amlvaran_worker:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
+    environment:
+    - MYSQL_HOST
+    - MYSQL_DATABASE
+    - MYSQL_USER
+    - MYSQL_PASSWORD
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
@@ -20,6 +29,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_web
+    restart: always
+    environment:
+    - MYSQL_HOST
+    - MYSQL_DATABASE
+    - MYSQL_USER
+    - MYSQL_PASSWORD
     ports:
     - "80:80"
     - "443:443"

@@ -1,15 +1,16 @@
-FROM apache
+FROM php:rc-apache
 
-LABEL maintainer=christian.wuensch@ukmuenster.de
-LABEL version=1.0
+ENV APACHE_DOCUMENT_ROOT /var/www
 
-WORKDIR ~
-COPY www /var/
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+COPY www/ /var/www/
 
 # Database configuration
 RUN echo "<?php" > /var/www/inc/constants.inc.php
-RUN echo "    define('DB_HOST', 'localhost');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_USER', 'amlvaran');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_PASS', '');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_NAME', 'amlvaran');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_HOST', '${MYSQL_HOST}');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_USER', '${MYSQL_USER}');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_PASS', '${MYSQL_PASSWORD}');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_NAME', '${MYSQL_DATABASE}');" >> /var/www/inc/constants.inc.php
 RUN echo "?>" >> /var/www/inc/constants.inc.php

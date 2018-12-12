@@ -40,6 +40,7 @@ RUN conda install \
   gatk=3.5 \
   varscan=2.4.0 \
   freebayes=1.0.* \
+  snver=0.5.3 \
   platypus-variant=0.8.1 
 
 # Special action for GATK
@@ -47,13 +48,13 @@ COPY GenomeAnalysisTK.jar /opt/GATK/
 RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
 
 # Install SNVer (not in bioconda)
-ADD https://downloads.sourceforge.net/project/snver/SNVer-0.5.3.tar.gz /opt/miniconda/opt/SNVer-0.5.3/
-COPY SNVerIndividual.sh /opt/miniconda/opt/SNVer-0.5.3/
-WORKDIR /opt/miniconda/opt/SNVer-0.5.3
-RUN tar -xzf SNVer-0.5.3.tar.gz
-RUN rm SNVer-0.5.3.tar.gz
-RUN ln -s /opt/miniconda/opt/SNVer-0.5.3/SNVerIndividual.sh /opt/miniconda/bin/SNVerIndividual
-RUN chmod 755 /opt/miniconda/bin/SNVerIndividual
+#ADD https://downloads.sourceforge.net/project/snver/SNVer-0.5.3.tar.gz /opt/miniconda/opt/SNVer-0.5.3/
+#COPY SNVerIndividual.sh /opt/miniconda/opt/SNVer-0.5.3/
+#WORKDIR /opt/miniconda/opt/SNVer-0.5.3
+#RUN tar -xzf SNVer-0.5.3.tar.gz
+#RUN rm SNVer-0.5.3.tar.gz
+#RUN ln -s /opt/miniconda/opt/SNVer-0.5.3/SNVerIndividual.sh /opt/miniconda/bin/SNVerIndividual
+#RUN chmod 755 /opt/miniconda/bin/SNVerIndividual
 
 # Install PROVEAN (optional)
 RUN conda install cd-hit blast
@@ -81,10 +82,10 @@ RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/us
 
 # Set MySQL access data
 RUN echo "[client]" > /root/.my.cnf
-RUN echo "host=amlvaran.uni-muenster.de" >> /root/.my.cnf
-RUN echo "user=amlvaran" >> /root/.my.cnf
-RUN echo "password=***" >> /root/.my.cnf
-RUN echo "database=amlvaran" >> /root/.my.cnf
+RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
+RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
+RUN echo "password=${MYSQL_USER}" >> /root/.my.cnf
+RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 
 
 # Get reference genome [required, but should be mounted instead]
