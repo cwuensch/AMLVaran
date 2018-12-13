@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile_db
     restart: always
+    volumes:
+    - ./mysql_data:/var/lib/mysql
     environment:
     - MYSQL_RANDOM_ROOT_PASSWORD: yes
     - MYSQL_DATABASE
@@ -15,12 +17,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        MYSQL_HOST
+        MYSQL_DATABASE
+        MYSQL_USER
+        MYSQL_PASSWORD
     restart: always
-    environment:
-    - MYSQL_HOST
-    - MYSQL_DATABASE
-    - MYSQL_USER
-    - MYSQL_PASSWORD
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
@@ -29,12 +31,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_web
+      args:
+        MYSQL_HOST
+        MYSQL_DATABASE
+        MYSQL_USER
+        MYSQL_PASSWORD
     restart: always
-    environment:
-    - MYSQL_HOST
-    - MYSQL_DATABASE
-    - MYSQL_USER
-    - MYSQL_PASSWORD
     ports:
     - "80:80"
     - "443:443"

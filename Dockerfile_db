@@ -6,7 +6,7 @@ LABEL version=1.0
 WORKDIR ~
 ADD https://amlvaran.uni-muenster.de/SQLdump/DBstruct.sql /docker-entrypoint-initdb.d/1-DBstruct.sql
 ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata_pre.sql /docker-entrypoint-initdb.d/2-DBdata_pre.sql
-ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata.sql.gz /docker-entrypoint-initdb.d/3-DBdata.sql.gz
+#ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata.sql.gz /docker-entrypoint-initdb.d/3-DBdata.sql.gz
 #RUN gzip -d DBdata.sql.gz
 RUN chmod a+r /docker-entrypoint-initdb.d/*
 
