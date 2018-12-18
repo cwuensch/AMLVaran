@@ -82,7 +82,7 @@ RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/us
 
 # Set MySQL access data
 RUN echo "[client]" > /root/.my.cnf
-RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
+RUN echo "host=127.0.0.1" >> /root/.my.cnf
 RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
 RUN echo "password=${MYSQL_USER}" >> /root/.my.cnf
 RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
@@ -94,7 +94,6 @@ RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 #WORKDIR /var/genomes
 #RUN tar -xzf Homo_sapiens.GRCh37.67.tar.gz
 #RUN rm Homo_sapiens.GRCh37.67.tar.gz
-#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
 
 # Get GATK ressources [optional, but should be mounted instead]
 #ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
@@ -103,3 +102,6 @@ RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 #RUN rm GATK_ressources.tar.gz
 
 # Get BlastDB ressources [optional, but should be mounted instead]
+
+WORKDIR /var/samples
+ENTRYPOINT /var/pipeline/PipelineDB.sh
