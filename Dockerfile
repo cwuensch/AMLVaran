@@ -14,7 +14,7 @@ RUN apt-get -q update && apt-get -q upgrade -yqq
 
 # Install libs
 RUN apt-get -q update && apt-get install -y \
-  bzip2 parallel mysql-client
+  bzip2 parallel net-tools mysql-client
 #  python2.7 python-mysqldb
 #  openjdk-8-jre-headless 
 

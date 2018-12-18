@@ -20,9 +20,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+      - MYSQL_HOST=amlvaran_db
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+    depends_on:
+    - amlvaran_db
     restart: always
     user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
@@ -34,9 +37,13 @@ services:
       context: .
       dockerfile: Dockerfile_web
       args:
+      - MYSQL_HOST=amlvaran_db
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+    depends_on:
+    - amlvaran_db
+    - amlvaran_worker
     restart: always
     user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     ports:
