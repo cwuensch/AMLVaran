@@ -6,10 +6,11 @@ services:
       dockerfile: Dockerfile_db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
     - ./mysql_data:/var/lib/mysql
     environment:
-    - MYSQL_RANDOM_ROOT_PASSWORD: yes
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
     - MYSQL_DATABASE
     - MYSQL_USER
     - MYSQL_PASSWORD
@@ -19,10 +20,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        MYSQL_DATABASE
-        MYSQL_USER
-        MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
     restart: always
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
@@ -32,10 +34,11 @@ services:
       context: .
       dockerfile: Dockerfile_web
       args:
-        MYSQL_DATABASE
-        MYSQL_USER
-        MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
     restart: always
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     ports:
     - "80:80"
     - "443:443"

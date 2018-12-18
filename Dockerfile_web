@@ -1,5 +1,11 @@
 FROM php:rc-apache
 
+# Build arguments (default values)
+ARG MYSQL_HOST=127.0.0.1
+ARG MYSQL_USER=amlvaran
+ARG MYSQL_PASSWORD=123456 
+ARG MYSQL_DATABASE=amlvaran 
+
 ENV APACHE_DOCUMENT_ROOT /var/www
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -9,7 +15,7 @@ COPY www/ /var/www/
 
 # Database configuration
 RUN echo "<?php" > /var/www/inc/constants.inc.php
-RUN echo "    define('DB_HOST', '127.0.0.1');" >> /var/www/inc/constants.inc.php
+RUN echo "    define('DB_HOST', '${MYSQL_HOST}');" >> /var/www/inc/constants.inc.php
 RUN echo "    define('DB_USER', '${MYSQL_USER}');" >> /var/www/inc/constants.inc.php
 RUN echo "    define('DB_PASS', '${MYSQL_PASSWORD}');" >> /var/www/inc/constants.inc.php
 RUN echo "    define('DB_NAME', '${MYSQL_DATABASE}');" >> /var/www/inc/constants.inc.php

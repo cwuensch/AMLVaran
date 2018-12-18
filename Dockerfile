@@ -3,6 +3,12 @@ FROM debian
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
 
+# Build arguments (default values)
+ARG MYSQL_HOST=127.0.0.1
+ARG MYSQL_USER=amlvaran
+ARG MYSQL_PASSWORD=123456 
+ARG MYSQL_DATABASE=amlvaran 
+
 # Update operating system
 RUN apt-get -q update && apt-get -q upgrade -yqq
 
@@ -82,7 +88,7 @@ RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/us
 
 # Set MySQL access data
 RUN echo "[client]" > /root/.my.cnf
-RUN echo "host=127.0.0.1" >> /root/.my.cnf
+RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
 RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
 RUN echo "password=${MYSQL_USER}" >> /root/.my.cnf
 RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf

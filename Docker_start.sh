@@ -28,4 +28,6 @@ cd $SCRIPT_DIR
 #docker run --rm -v /media/watson/projects/christian/amlvaran/samples:/var/samples -v /media/watson/projects/christian/amlvaran/genomes:/var/genomes -t amlvaran/worker
 #docker run --rm -v /media/watson/projects/christian/amlvaran/samples:/var/samples -t amlvaran/web
 
-docker compose up
+export HOST_USER_ID=$(id -u)
+export HOST_GROUP_ID=$(id -g)
+docker-compose up
