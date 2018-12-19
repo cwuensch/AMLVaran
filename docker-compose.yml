@@ -27,7 +27,6 @@ services:
     depends_on:
     - amlvaran_db
     restart: always
-    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
@@ -45,10 +44,9 @@ services:
     - amlvaran_db
     - amlvaran_worker
     restart: always
-    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     ports:
-    - "80:80"
-    - "443:443"
+    - 80:80
+    - 443:443
     volumes:
     - ./samples:/var/samples
     
