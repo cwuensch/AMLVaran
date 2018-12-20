@@ -3,6 +3,8 @@ FROM mysql
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
 
+COPY mysql.cnf /etc/mysql/conf.d/amlvaran.cnf
+
 WORKDIR ~
 #ADD https://amlvaran.uni-muenster.de/SQLdump/DBstruct.sql /docker-entrypoint-initdb.d/1-DBstruct.sql
 #ADD https://amlvaran.uni-muenster.de/SQLdump/DBdata_pre.sql /docker-entrypoint-initdb.d/2-DBdata_pre.sql

@@ -1,6 +1,6 @@
 version: '2'
 services:
-  amlvaran_db:
+  db:
     build:
       context: .
       dockerfile: Dockerfile_db
@@ -15,34 +15,34 @@ services:
     - MYSQL_USER
     - MYSQL_PASSWORD
 
-  amlvaran_worker:
+  worker:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-      - MYSQL_HOST=amlvaran_db
+      - MYSQL_HOST=db
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
     depends_on:
-    - amlvaran_db
+    - db
     restart: always
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
     
-  amlvaran_web:
+  web:
     build:
       context: .
       dockerfile: Dockerfile_web
       args:
-      - MYSQL_HOST=amlvaran_db
+      - MYSQL_HOST=db
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
     depends_on:
-    - amlvaran_db
-    - amlvaran_worker
+    - db
+    - worker
     restart: always
     ports:
     - 80:80
