@@ -64,7 +64,7 @@ RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
 
 # Install PROVEAN (optional)
 RUN conda install cd-hit blast
-ADD https://amlvaran.uni-muenster.de/Reference/Provean_compiled.tar.gz /opt/Provean/
+ADD https://static.uni-muenster.de/amlvaran/Reference/Provean_compiled.tar.gz /opt/Provean/
 WORKDIR /opt/Provean
 RUN tar -xzf Provean_compiled.tar.gz
 RUN rm Provean_compiled.tar.gz
@@ -95,14 +95,14 @@ RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 
 
 # Get reference genome [required, but should be mounted instead]
-#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
+#ADD https://static.uni-muenster.de/amlvaran/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
 #ADD https://bioinformatics.mdanderson.org/Software/VariantTools/repository/reference/hg19.crr /var/genomes/
 #WORKDIR /var/genomes
 #RUN tar -xzf Homo_sapiens.GRCh37.67.tar.gz
 #RUN rm Homo_sapiens.GRCh37.67.tar.gz
 
 # Get GATK ressources [optional, but should be mounted instead]
-#ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
+#ADD https://static.uni-muenster.de/amlvaran/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
 #WORKDIR /var/genomes/gatk
 #RUN tar -xzf GATK_ressources.tar.gz
 #RUN rm GATK_ressources.tar.gz

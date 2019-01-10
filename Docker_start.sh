@@ -25,7 +25,7 @@ if [ ! -f $SCRIPT_DIR/mysql_data/amlvaran/Variants.ibd ]; then
     echo "Prepopulating MySQL database..."
     mkdir $SCRIPT_DIR/mysql_data
     cd $SCRIPT_DIR/mysql_data
-    wget -qO- https://amlvaran.uni-muenster.de/SQLdump/DB.tar.gz | tar -xz -C $SCRIPT_DIR/mysql_data
+    wget -qO- https://static.uni-muenster.de/amlvaran/SQLdump/DB.tar.gz | tar -xz -C $SCRIPT_DIR/mysql_data
 fi
 
 echo "Starting Docker..."
