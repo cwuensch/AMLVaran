@@ -90,7 +90,7 @@ RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/us
 RUN echo "[client]" > /root/.my.cnf
 RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
 RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
-RUN echo "password=${MYSQL_USER}" >> /root/.my.cnf
+RUN echo "password=${MYSQL_PASSWORD}" >> /root/.my.cnf
 RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 
 
