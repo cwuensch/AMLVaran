@@ -1,6 +1,14 @@
 FROM php:rc-apache
 
+# Build arguments (default values)
+ARG MYSQL_HOST=127.0.0.1
+ARG MYSQL_USER=amlvaran
+ARG MYSQL_PASSWORD=123456 
+ARG MYSQL_DATABASE=amlvaran 
+
 ENV APACHE_DOCUMENT_ROOT /var/www
+
+RUN docker-php-ext-install pdo pdo_mysql
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf

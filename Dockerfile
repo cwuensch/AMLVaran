@@ -3,12 +3,18 @@ FROM debian
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
 
+# Build arguments (default values)
+ARG MYSQL_HOST=127.0.0.1
+ARG MYSQL_USER=amlvaran
+ARG MYSQL_PASSWORD=123456 
+ARG MYSQL_DATABASE=amlvaran 
+
 # Update operating system
 RUN apt-get -q update && apt-get -q upgrade -yqq
 
 # Install libs
 RUN apt-get -q update && apt-get install -y \
-  bzip2 parallel mysql-client
+  bzip2 parallel net-tools mysql-client
 #  python2.7 python-mysqldb
 #  openjdk-8-jre-headless 
 
@@ -58,7 +64,7 @@ RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
 
 # Install PROVEAN (optional)
 RUN conda install cd-hit blast
-ADD https://amlvaran.uni-muenster.de/Reference/Provean_compiled.tar.gz /opt/Provean/
+ADD https://static.uni-muenster.de/amlvaran/Reference/Provean_compiled.tar.gz /opt/Provean/
 WORKDIR /opt/Provean
 RUN tar -xzf Provean_compiled.tar.gz
 RUN rm Provean_compiled.tar.gz
@@ -84,22 +90,24 @@ RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/us
 RUN echo "[client]" > /root/.my.cnf
 RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
 RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
-RUN echo "password=${MYSQL_USER}" >> /root/.my.cnf
+RUN echo "password=${MYSQL_PASSWORD}" >> /root/.my.cnf
 RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 
 
 # Get reference genome [required, but should be mounted instead]
-#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
+#ADD https://static.uni-muenster.de/amlvaran/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
 #ADD https://bioinformatics.mdanderson.org/Software/VariantTools/repository/reference/hg19.crr /var/genomes/
 #WORKDIR /var/genomes
 #RUN tar -xzf Homo_sapiens.GRCh37.67.tar.gz
 #RUN rm Homo_sapiens.GRCh37.67.tar.gz
-#ADD https://amlvaran.uni-muenster.de/Reference/Homo_sapiens.GRCh37.67.tar.gz /var/genomes/
 
 # Get GATK ressources [optional, but should be mounted instead]
-#ADD https://amlvaran.uni-muenster.de/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
+#ADD https://static.uni-muenster.de/amlvaran/Reference/GATK_ressources.tar.gz /var/genomes/gatk/
 #WORKDIR /var/genomes/gatk
 #RUN tar -xzf GATK_ressources.tar.gz
 #RUN rm GATK_ressources.tar.gz
 
 # Get BlastDB ressources [optional, but should be mounted instead]
+
+WORKDIR /var/samples
+ENTRYPOINT /var/pipeline/PipelineDB.sh

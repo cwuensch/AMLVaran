@@ -1,45 +1,52 @@
 version: '2'
 services:
-  amlvaran_db:
+  db:
     build:
       context: .
       dockerfile: Dockerfile_db
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
+    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
     - ./mysql_data:/var/lib/mysql
     environment:
-    - MYSQL_RANDOM_ROOT_PASSWORD: yes
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
     - MYSQL_DATABASE
     - MYSQL_USER
     - MYSQL_PASSWORD
 
-  amlvaran_worker:
+  worker:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        MYSQL_HOST
-        MYSQL_DATABASE
-        MYSQL_USER
-        MYSQL_PASSWORD
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    depends_on:
+    - db
     restart: always
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
     
-  amlvaran_web:
+  web:
     build:
       context: .
       dockerfile: Dockerfile_web
       args:
-        MYSQL_HOST
-        MYSQL_DATABASE
-        MYSQL_USER
-        MYSQL_PASSWORD
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    depends_on:
+    - db
+    - worker
     restart: always
     ports:
-    - "80:80"
-    - "443:443"
+    - 80:80
+    - 443:443
     volumes:
     - ./samples:/var/samples
     

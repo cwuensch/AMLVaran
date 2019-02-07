@@ -2,5 +2,6 @@ genomes/Homo_sapiens.*
 genomes/hg19.crr
 genomes/gatk
 genomes/blast
+mysql_data
 samples
 GenomeAnalysisTK.jar
