@@ -24,13 +24,13 @@ $sqlGetMetadata = 'SELECT Patientname, Patientnumber, Birthdate, Sex, SampleTake
 samples LEFT JOIN patients ON samples.PatientID = patients.PatientID
 WHERE SampleID = :sid';
 
-$sqlGetOverview = file_get_contents('getOverview.sql');
+$sqlGetOverview = file_get_contents('/var/www/report/getOverview.sql');
 
-$sqlGetRanges = file_get_contents('getRanges.sql');
+$sqlGetRanges = file_get_contents('/var/www/report/getRanges.sql');
 
-$sqlGetRelevant = file_get_contents('getRelevant.sql');
+$sqlGetRelevant = file_get_contents('/var/www/report/getRelevant.sql');
 
-$sqlGetDiagnosis = file_get_contents('getDiagnosis.sql');
+$sqlGetDiagnosis = file_get_contents('/var/www/report/getDiagnosis.sql');
 
 try {
     $stmt = $db->prepare($sqlGetPid);
