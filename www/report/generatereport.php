@@ -72,7 +72,20 @@ if(isset($pid)){
                 echo "no data received for this sample";
             }
         } catch(PDOException $e) {
-            echo "problem with database query"; }
+            echo "problem with database query";
+        }
+        try {
+            $stmt = $db->prepare('SELECT Sequencer, Panel, Technique, Remarks FROM cfg_LabProfiles WHERE DesignID=:design');
+            $stmt->bindParam(':design', $design, PDO::PARAM_INT);
+            $stmt->execute();
+            if($stmt->rowCount()==1) {
+                $labdata = $stmt->fetch(PDO::FETCH_ASSOC);
+                $sequencer = $labdata['Sequencer'];
+                $panel = $labdata['Panel'];
+            }
+        } catch(PDOException $e) {
+            echo "problem with database query";
+        }
     }
 }
 
@@ -392,8 +405,12 @@ if(isset($rows)){
 
     echo '</table></div>';
 
+    echo '<p style="color:#aaa">This sample was sequenced with lab design ' . $design . ' (Sequencer: ' . $sequencer . ', Panel: ' . $panel . ').<br>
+    The analysis and report generation was generated on ' . date(DATE_RFC822) . ' with AMLVaran configuration version ' . $version . '.<br>
+    Detailed information about the processing steps can be obtained from <a href="http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf">http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf.</p>';
+    
 //    echo '<p style="color:#aaa">The analysis was performed on 2016-01-17 with our AML configuration 1, consisting of:<br>
-//Design: Targeted NGS, Illumina MySeq with Haloplex custom panel ‚ÄúIMI-v1‚Äù.<br>
+//Design: Targeted NGS, Illumina MySeq with Haloplex custom panel ìIMI-v1î.<br>
 //Analysis: based on BWA-mem 0.7.12, GATK 3.30 and VariantTools 2.7 (pipeline version v0).<br>
 //Interpretation: based on clinVar database from 2015-09-29 and custom hotspot definitions v1.</p>';
 }
