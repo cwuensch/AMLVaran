@@ -79,7 +79,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSI
                             </div>
                             <div class="modal-body" id="NewPatientModalContent">
                                 <div class="form-group">
-                                    <label for="NewPatientname">Name (pseudoym)</label>
+                                    <label for="NewPatientname">Name (pseudonym)</label>
                                     <input type="text" id="NewPatientname" class="form-control" maxlength="50" />
                                 </div>
                                 <div class="alert alert-danger" role="alert" id="NewPatientnameError" style="display:none;">

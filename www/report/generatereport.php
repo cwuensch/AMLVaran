@@ -1,4 +1,4 @@
-<?php
+^<?php
 
 // Include database credentials
 include_once "../inc/constants.inc.php";
@@ -24,13 +24,13 @@ $sqlGetMetadata = 'SELECT Patientname, Patientnumber, Birthdate, Sex, SampleTake
 samples LEFT JOIN patients ON samples.PatientID = patients.PatientID
 WHERE SampleID = :sid';
 
-$sqlGetOverview = file_get_contents('/var/amlvaran/www/report/getOverview.sql');
+$sqlGetOverview = file_get_contents('getOverview.sql');
 
-$sqlGetRanges = file_get_contents('/var/amlvaran/www/report/getRanges.sql');
+$sqlGetRanges = file_get_contents('getRanges.sql');
 
-$sqlGetRelevant = file_get_contents('/var/amlvaran/www/report/getRelevant.sql');
+$sqlGetRelevant = file_get_contents('getRelevant.sql');
 
-$sqlGetDiagnosis = file_get_contents('/var/amlvaran/www/report/getDiagnosis.sql');
+$sqlGetDiagnosis = file_get_contents('getDiagnosis.sql');
 
 try {
     $stmt = $db->prepare($sqlGetPid);
@@ -97,7 +97,7 @@ if(isset($rows)){
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
       <title>AML VARAN | <?php echo $pageTitle ?></title>
-      <link href="/var/amlvaran/www/common/stylesheets/reportstylesheet.css" rel="stylesheet"/>
+      <link href="../common/stylesheets/reportstylesheet.css" rel="stylesheet"/>
     </head>
     <p class="head3">Clinical Variant Report</p>
     <p class="warningpdf">This is not a medical product. Use only for research purposes!</p>';
@@ -404,13 +404,13 @@ if(isset($rows)){
     }
 
     echo '</table></div>';
-    
+
     echo '<p style="color:#aaa">This sample was sequenced with lab design ' . $design . ' (Sequencer: ' . $sequencer . ', Panel: ' . $panel . ').<br>
     The analysis and report generation was generated on ' . date(DATE_RFC822) . ' with AMLVaran configuration version ' . $version . '.<br>
     Detailed information about the processing steps can be obtained from <a href="http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf">http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf.</p>';
    
 //    echo '<p style="color:#aaa">The analysis was performed on 2016-01-17 with our AML configuration 1, consisting of:<br>
-//Design: Targeted NGS, Illumina MySeq with Haloplex custom panel “IMI-v1”.<br>
+//Design: Targeted NGS, Illumina MySeq with Haloplex custom panel "IMI-v1".<br>
 //Analysis: based on BWA-mem 0.7.12, GATK 3.30 and VariantTools 2.7 (pipeline version v0).<br>
 //Interpretation: based on clinVar database from 2015-09-29 and custom hotspot definitions v1.</p>';
 }
