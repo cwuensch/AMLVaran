@@ -484,7 +484,7 @@ MIN(MutationID) AS inHotspot FROM
             $check = $this->checkSampleID($sid);
             if($check[0] == 1) {
                 if($check[1] == true) {
-                    $sql = file_get_contents('/var/amlvaran/www/report/getAllVariants.sql');
+                    $sql = file_get_contents(dirname(__FILE__) . '/../report/getAllVariants.sql');
 
                     try
                     {
@@ -527,7 +527,7 @@ MIN(MutationID) AS inHotspot FROM
             $check = $this->checkSampleID($sid);
             if($check[0] == 1) {
                 if($check[1] == true) {
-                    $sql = file_get_contents('/var/amlvaran/www/report/getAllRanges.sql');
+                    $sql = file_get_contents(dirname(__FILE__) . '/../report/getAllRanges.sql');
 
                     try
                     {
@@ -876,7 +876,7 @@ ORDER BY NrBadCovered, NrMutations DESC, MutationID';
             if($check[0] == 1) {
                 if($check[1] == true) {
 
-                    $sql = file_get_contents('/var/amlvaran/www/report/getGenePanel.sql');
+                    $sql = file_get_contents(dirname(__FILE__) . '/../report/getGenePanel.sql');
                     try
                     {
                         $stmt = $this->_db->prepare($sql);
