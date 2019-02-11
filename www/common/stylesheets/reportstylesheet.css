@@ -127,11 +127,11 @@ tfoot {
   margin-bottom: 10px; }
 
 .warning {
-  font-size: 16px;
+  font-size: 15px;
   color: #a00000;
   text-align: center;
-  margin-top: 15px;
-  margin-bottom: 10px; }
+  margin-top: 10px;
+  margin-bottom: 20px; }
 
 .warningpdf {
   font-size: 18px;
