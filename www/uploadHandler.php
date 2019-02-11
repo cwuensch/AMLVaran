@@ -40,14 +40,14 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['Lo
 
             if(!file_exists('../samples/' . $_POST['pid'] . '/')) {
                 mkdir('../samples/' . $_POST['pid'] . '/', 0777, true);
-                chgrp('../samples/' . $_POST['pid'] . '/','amlvaran');
-                chmod('../samples/' . $_POST['pid'] . '/',0775);
+//                chgrp('../samples/' . $_POST['pid'] . '/','amlvaran');
+                chmod('../samples/' . $_POST['pid'] . '/',0777);
             }
 
             if (!file_exists(UPLOAD_DIR)){
                 mkdir(UPLOAD_DIR, 0777, true);
-                chgrp(UPLOAD_DIR,'amlvaran');
-                chmod(UPLOAD_DIR,0775);
+//                chgrp(UPLOAD_DIR,'amlvaran');
+                chmod(UPLOAD_DIR,0777);
             }
 
             // preserve file from temporary directory
@@ -88,14 +88,14 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['Lo
 
             if(!file_exists('../designs/' . $_POST['did'] . '/')) {
                 mkdir('../designs/' . $_POST['did'] . '/', 0777, true);
-                chgrp('../designs/' . $_POST['did'] . '/','amlvaran');
-                chmod('../designs/' . $_POST['did'] . '/',0775);
+//                chgrp('../designs/' . $_POST['did'] . '/','amlvaran');
+                chmod('../designs/' . $_POST['did'] . '/',0777);
             }
 
             if (!file_exists(UPLOAD_DIR)){
                 mkdir(UPLOAD_DIR, 0777, true);
-                chgrp(UPLOAD_DIR,'amlvaran');
-                chmod(UPLOAD_DIR,0775);
+//                chgrp(UPLOAD_DIR,'amlvaran');
+                chmod(UPLOAD_DIR,0777);
             }
 
             // preserve file from temporary directory

@@ -1202,11 +1202,11 @@ ORDER BY NrBadCovered, NrMutations DESC, MutationID';
                             catch(PDOException $e)
                             {
                                 return array(0, 
-                                    "Something went wrong while saving the sample info.");
+                                    "Something went wrong while saving the sample info. [1]");
                             }
 
                             $sql = 'INSERT INTO samples (PatientID, UserID, Diagnosis, Comments, SampleTakeDate, Created, design, version)
-                                VALUES (:pid, :uid, :diagnosis, :comments, :std, NOW(), :designId, :versionId)';
+                                VALUES (:pid, :uid, :diagnosis, :comments, DATE(:std), NOW(), :designId, :versionId)';
                             try
                             {
                                 $stmt = $this->_db->prepare($sql);
@@ -1214,7 +1214,10 @@ ORDER BY NrBadCovered, NrMutations DESC, MutationID';
                                 $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_INT);
                                 $stmt->bindParam(':diagnosis', $data[0], PDO::PARAM_STR);
                                 $stmt->bindParam(':comments', $data[1], PDO::PARAM_STR);
-                                $stmt->bindParam(':std', $data[2], PDO::PARAM_STR);
+                                if (empty($data[2]) || $data[2] == ' ')
+                                  $stmt->bindValue(':std', NULL, PDO::PARAM_STR);
+                                else
+                                  $stmt->bindParam(':std', $data[2], PDO::PARAM_STR);
                                 $stmt->bindParam(':designId', $data[3], PDO::PARAM_INT);
                                 $stmt->bindParam(':versionId', $newver, PDO::PARAM_INT);
 
@@ -1225,13 +1228,13 @@ ORDER BY NrBadCovered, NrMutations DESC, MutationID';
                                 else
                                 {
                                     return array(0, 
-                                        "Something went wrong while saving the sample info.");
+                                        "Something went wrong while saving the sample info. [2]");
                                 }
                             }
                             catch(PDOException $e)
                             {
                                 return array(0, 
-                                    "Something went wrong while saving the sample info.");
+                                    "Something went wrong while saving the sample info. [3]");
                             }
                         } else {
                             return array(0, 
@@ -1437,7 +1440,10 @@ ORDER BY NrBadCovered, NrMutations DESC, MutationID';
                             $stmt->bindParam(':sid', $sid, PDO::PARAM_INT);
                             $stmt->bindParam(':diagnosis', $diagnosis, PDO::PARAM_STR);
                             $stmt->bindParam(':comments', $comments, PDO::PARAM_STR);
-                            $stmt->bindParam(':std', $std, PDO::PARAM_STR);
+                            if (empty($std || $std == ' '))
+                              $stmt->bindValue(':std', NULL, PDO::PARAM_STR);
+                            else
+                              $stmt->bindParam(':std', $std, PDO::PARAM_STR);
                             $stmt->execute();
 
                             if($stmt->rowCount() > 0)

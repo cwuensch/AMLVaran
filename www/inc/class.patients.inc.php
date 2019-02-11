@@ -170,7 +170,10 @@ class DkhPatients
                     $stmt->bindParam(':pid', $pid, PDO::PARAM_INT);
                     $stmt->bindParam(':pname', $pname, PDO::PARAM_STR);
                     $stmt->bindParam(':pnumber', $pnumber, PDO::PARAM_STR);
-                    $stmt->bindParam(':bd', $bd, PDO::PARAM_STR);
+                    if (empty($bd) || $bd == ' ')
+                      $stmt->bindValue(':bd', NULL, PDO::PARAM_STR);
+                    else
+                      $stmt->bindParam(':bd', $bd, PDO::PARAM_STR);
                     $stmt->bindParam(':sex', $sex, PDO::PARAM_STR);
                     $stmt->execute();
 
@@ -213,15 +216,15 @@ class DkhPatients
                     VALUES (:uid, :pname, :pnumber, DATE(:bd), :sex, NOW())';
                 try
                 {
-                    
                     $stmt = $this->_db->prepare($sql);
                     $stmt->bindParam(':uid', $_SESSION['UserID'], PDO::PARAM_INT);
                     $stmt->bindParam(':pname', $pname, PDO::PARAM_STR);
                     $stmt->bindParam(':pnumber', $pnumber, PDO::PARAM_STR);
-                    $stmt->bindParam(':bd', $bd, PDO::PARAM_STR);
+                    if (empty($bd) || $bd == ' ')
+                      $stmt->bindValue(':bd', NULL, PDO::PARAM_STR);
+                    else
+                      $stmt->bindParam(':bd', $bd, PDO::PARAM_STR);
                     $stmt->bindParam(':sex', $sex, PDO::PARAM_STR);
-                    
-                    
                     
                     if($stmt->execute())
                     {

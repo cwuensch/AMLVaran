@@ -17,7 +17,7 @@ if(isset($_SESSION['LoggedIn']) && $_SESSION['LoggedIn']==1) {
         if ($validsid[0] == 1) {
             if ($validsid[1] == true) {
 
-                $file = '/var/amlvaran/samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf';
+                $file = '../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf';
                 if (file_exists($file)) {
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');

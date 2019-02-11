@@ -24,11 +24,11 @@ if(!empty($_POST['action'])
                 echo json_encode($patients->getPatientBySid($_POST['sid']));
             break;
         case 'updatePatient':
-            if(!empty($_POST['pid']) && !empty($_POST['pname']) && !empty($_POST['pnumber']) && !empty($_POST['bd']) && !empty($_POST['sex']))
+            if(!empty($_POST['pid']) && !empty($_POST['pname']))
                 echo json_encode($patients->updatePatient($_POST['pid'],$_POST['pname'],$_POST['pnumber'],$_POST['bd'],$_POST['sex']));
             break;
         case 'createPatient':
-            if(!empty($_POST['pname']) && !empty($_POST['pnumber']) && !empty($_POST['bd']) && !empty($_POST['sex']))
+            if(!empty($_POST['pname']))
                 echo json_encode($patients->createPatient($_POST['pname'],$_POST['pnumber'],$_POST['bd'],$_POST['sex']));
             break;
         default:
