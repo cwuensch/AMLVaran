@@ -29,7 +29,7 @@
                 </div>
 
                 <h3 style="text-align:center; margin-top:0px;">Clinical Variant Report</h3>
-                <p class="warning">This is not a medical product. Use only for research purposes!</p>;
+                <p class="warning">This is not a medical product. Use only for research purposes!</p>
             </div>
         </div>
         <div class="row row1">

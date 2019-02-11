@@ -1,4 +1,4 @@
-^<?php
+<?php
 
 // Include database credentials
 include_once "../inc/constants.inc.php";
