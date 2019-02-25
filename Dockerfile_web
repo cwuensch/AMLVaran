@@ -1,4 +1,4 @@
-FROM php:5.6.38-apache
+FROM php:5-apache
 
 ENV MYSQL_HOST=127.0.0.1
 ENV MYSQL_USER=amlvaran
