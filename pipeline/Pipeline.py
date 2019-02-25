@@ -49,8 +49,8 @@ protocol = "Sample" + SampleID + "\t" + str(num_lines1) + "\t" + str(num_lines2-
 
 
 # Read MySQL-defaults
-cfgParser = ConfigParser.RawConfigParser()
-cfgParser.read("~/.my.cfg")
+cfgParser = RawConfigParser()
+cfgParser.read("~/.my.cnf")
 DBhost=cfgParser.get("client", "host")
 DBuser=cfgParser.get("client", "user")
 DBpassword=cfgParser.get("client", "password")

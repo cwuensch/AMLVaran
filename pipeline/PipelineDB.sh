@@ -4,6 +4,17 @@ MYIP="$( /sbin/ifconfig eth0 | grep 'inet Adresse' | cut -d: -f2 | awk '{print $
 SCRIPT_DIR=$(readlink -f $0)
 SCRIPT_DIR=${SCRIPT_DIR%/*}
 
+## Set Variant Tools ressources folder
+#vtools --version
+#echo "user_stash='~/.variant_tools;/var/genomes'" >> ~/.variant_tools/user_options.py 
+
+## Set MySQL access data
+#echo "[client]" > ~/.my.cnf
+#echo "host=${MYSQL_HOST}" >> ~/.my.cnf
+#echo "user=${MYSQL_USER}" >> ~/.my.cnf
+#echo "password=${MYSQL_PASSWORD}" >> ~/.my.cnf
+#echo "database=${MYSQL_DATABASE}" >> ~/.my.cnf
+
 while [ 1 ]
 do
   mysql -sNe "UPDATE samples SET Worker='$MYIP' WHERE (StateCode BETWEEN 1 AND 99) AND (Worker='$MYIP' OR Worker IS NULL) ORDER BY Created LIMIT 1"

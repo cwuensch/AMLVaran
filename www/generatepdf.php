@@ -31,22 +31,22 @@ if(isset($_SESSION['LoggedIn']) && $_SESSION['LoggedIn']==1) {
                 if (!file_exists('../samples/' . $pid) && !is_dir('../samples/' . $pid)) {
                     mkdir ('../samples/' . $pid); 
 //                    chgrp('../samples/' . $pid, 'amlvaran');
-                    chmod('../samples/' . $pid, 0777);
+                    chmod('../samples/' . $pid, 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid) && !is_dir('../samples/' . $pid . '/' . $sid)) {
                     mkdir ('../samples/' . $pid . '/' . $sid); 
 //                    chgrp('../samples/' . $pid . '/' . $sid, 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid, 0777);
+                    chmod('../samples/' . $pid . '/' . $sid, 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid . '/reports') && !is_dir('../samples/' . $pid . '/' . $sid . '/reports')) {
                     mkdir ('../samples/' . $pid . '/' . $sid . '/reports'); 
 //                    chgrp('../samples/' . $pid . '/' . $sid . '/reports', 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid . '/reports', 0777);
+                    chmod('../samples/' . $pid . '/' . $sid . '/reports', 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid . '/reports/version' . $version) && !is_dir('../samples/' . $pid . '/' . $sid . '/reports/version' . $version)) {
                     mkdir('../samples/' . $pid . '/' . $sid . '/reports/version' . $version); 
 //                    chgrp('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 0777);
+                    chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 0700);
                 }
 
                 $returnstring .= file_put_contents('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', $_POST['html']);

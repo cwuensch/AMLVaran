@@ -1,24 +1,32 @@
-FROM php:rc-apache
+FROM php:5.6.38-apache
 
-# Build arguments (default values)
-ARG MYSQL_HOST=127.0.0.1
-ARG MYSQL_USER=amlvaran
-ARG MYSQL_PASSWORD=123456 
-ARG MYSQL_DATABASE=amlvaran 
+ENV MYSQL_HOST=127.0.0.1
+ENV MYSQL_USER=amlvaran
+ENV MYSQL_PASSWORD=123456 
+ENV MYSQL_DATABASE=amlvaran 
 
 ENV APACHE_DOCUMENT_ROOT /var/www
+ENV APACHE_RUN_USER wwwdata
+ENV APACHE_RUN_GROUP wwwdata
 
 RUN docker-php-ext-install pdo pdo_mysql
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+RUN echo "file_uploads = On\n" \
+         "memory_limit = 8G\n" \
+         "upload_max_filesize = 8G\n" \
+         "post_max_size = 8G\n" \
+         "max_execution_time = 600\n" \
+         > /usr/local/etc/php/conf.d/uploads.ini
+
 COPY www/ /var/www/
 
 # Database configuration
-RUN echo "<?php" > /var/www/inc/constants.inc.php
-RUN echo "    define('DB_HOST', '${MYSQL_HOST}');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_USER', '${MYSQL_USER}');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_PASS', '${MYSQL_PASSWORD}');" >> /var/www/inc/constants.inc.php
-RUN echo "    define('DB_NAME', '${MYSQL_DATABASE}');" >> /var/www/inc/constants.inc.php
-RUN echo "?>" >> /var/www/inc/constants.inc.php
+#RUN echo "<?php" > /var/www/inc/constants.inc.php
+#RUN echo "    define('DB_HOST', '${MYSQL_HOST}');" >> /var/www/inc/constants.inc.php
+#RUN echo "    define('DB_USER', '${MYSQL_USER}');" >> /var/www/inc/constants.inc.php
+#RUN echo "    define('DB_PASS', '${MYSQL_PASSWORD}');" >> /var/www/inc/constants.inc.php
+#RUN echo "    define('DB_NAME', '${MYSQL_DATABASE}');" >> /var/www/inc/constants.inc.php
+#RUN echo "?>" >> /var/www/inc/constants.inc.php

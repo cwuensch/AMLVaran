@@ -1,7 +1,7 @@
 <?php
 
 // Include database credentials
-include_once "../inc/constants.inc.php";
+include_once "inc/constants.inc.php";
 
 $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=utf8";
 $db = new PDO($dsn, DB_USER, DB_PASS);
@@ -405,6 +405,7 @@ if(isset($rows)){
 
     echo '</table></div>';
 
+    date_default_timezone_set("Europe/Berlin");
     echo '<p style="color:#aaa">This sample was sequenced with lab design ' . $design . ' (Sequencer: ' . $sequencer . ', Panel: ' . $panel . ').<br>
     The analysis and report generation was generated on ' . date(DATE_RFC822) . ' with AMLVaran configuration version ' . $version . '.<br>
     Detailed information about the processing steps can be obtained from <a href="http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf">http://amlvaran.uni-muenster.de/doc/Version' . $version . '.pdf.</p>';

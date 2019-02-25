@@ -140,7 +140,7 @@ class DkhDesigns
                     if($stmt->rowCount()==1) {
                         $sql = 'UPDATE cfg_LabProfiles
                             SET StateCode=1
-                            WHERE dESIGNid=:did';
+                            WHERE DesignID=:did';
                         try
                         {
                             $stmt = $this->_db->prepare($sql);

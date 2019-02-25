@@ -31,8 +31,8 @@ f = open(InputFile, 'r')
 csvReader = csv.reader(f, delimiter='\t', quotechar='"')
 
 # Read MySQL-defaults
-cfgParser = ConfigParser.RawConfigParser()
-cfgParser.read("~/.my.cfg")
+cfgParser = RawConfigParser()
+cfgParser.read("~/.my.cnf")
 DBhost=cfgParser.get("client", "host")
 DBuser=cfgParser.get("client", "user")
 DBpassword=cfgParser.get("client", "password")

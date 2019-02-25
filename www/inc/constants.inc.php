@@ -1,9 +1,9 @@
 <?php
 
     // Database credentials
-    define('DB_HOST', 'db');
-    define('DB_USER', 'amlvaran');
-    define('DB_PASS', '123456');
-    define('DB_NAME', 'amlvaran');
+    define('DB_HOST', $_ENV['MYSQL_HOST']);
+    define('DB_USER', $_ENV['MYSQL_USER']);
+    define('DB_PASS', $_ENV['MYSQL_PASSWORD']);
+    define('DB_NAME', $_ENV['MYSQL_DATABASE']);
 
 ?>

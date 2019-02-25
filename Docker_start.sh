@@ -21,7 +21,7 @@ if [ ! -f nr.05.psq ]; then
     sh getBlastDB.sh
 fi
 
-if [ ! -f $SCRIPT_DIR/mysql_data/amlvaran/Variants.ibd ]; then
+if [ ! -d $SCRIPT_DIR/mysql_data/amlvaran ]; then
     echo "Prepopulating MySQL database..."
     mkdir $SCRIPT_DIR/mysql_data
     cd $SCRIPT_DIR/mysql_data

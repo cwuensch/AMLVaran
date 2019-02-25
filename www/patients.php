@@ -145,7 +145,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSI
                                     <span class="sr-only">Error:</span>
                                     <span class="message"> Design is a required field!</span>
                                 </div>
-                                <form enctype="text/plain" method="post" action="uploadHandler.php" id="uploadForm" style="margin-top:11px;">
+                                <form enctype="multipart/form-data" method="post" action="uploadHandler.php" id="uploadForm" style="margin-top:11px;">
                                     <label for="fileUpload">Select a fastq, bam or vcf file to upload:</label>
                                     <input type="file" name="fileUpload" id="fileUpload" />
                                 </form>

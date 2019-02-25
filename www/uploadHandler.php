@@ -1,8 +1,8 @@
 <?php
-    include_once "common/base.php";
-    include_once "inc/class.samples.inc.php";
-    include_once "inc/class.designs.inc.php";
-
+include_once "common/base.php";
+include_once "inc/class.samples.inc.php";
+include_once "inc/class.designs.inc.php";
+ 
 if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['LoggedIn']==1) {
     if(isset($_POST['pid']) && isset($_POST['sid'])) { //SampleUpload
         
@@ -39,15 +39,15 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['Lo
             }
 
             if(!file_exists('../samples/' . $_POST['pid'] . '/')) {
-                mkdir('../samples/' . $_POST['pid'] . '/', 0777, true);
+                mkdir('../samples/' . $_POST['pid'] . '/', 0700, true);
 //                chgrp('../samples/' . $_POST['pid'] . '/','amlvaran');
-                chmod('../samples/' . $_POST['pid'] . '/',0777);
+                chmod('../samples/' . $_POST['pid'] . '/',0700);
             }
 
             if (!file_exists(UPLOAD_DIR)){
-                mkdir(UPLOAD_DIR, 0777, true);
+                mkdir(UPLOAD_DIR, 0700, true);
 //                chgrp(UPLOAD_DIR,'amlvaran');
-                chmod(UPLOAD_DIR,0777);
+                chmod(UPLOAD_DIR,0700);
             }
 
             // preserve file from temporary directory
@@ -87,15 +87,15 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['Lo
             $name = 'upload.txt';            
 
             if(!file_exists('../designs/' . $_POST['did'] . '/')) {
-                mkdir('../designs/' . $_POST['did'] . '/', 0777, true);
+                mkdir('../designs/' . $_POST['did'] . '/', 0700, true);
 //                chgrp('../designs/' . $_POST['did'] . '/','amlvaran');
-                chmod('../designs/' . $_POST['did'] . '/',0777);
+                chmod('../designs/' . $_POST['did'] . '/',0700);
             }
 
             if (!file_exists(UPLOAD_DIR)){
-                mkdir(UPLOAD_DIR, 0777, true);
+                mkdir(UPLOAD_DIR, 0700, true);
 //                chgrp(UPLOAD_DIR,'amlvaran');
-                chmod(UPLOAD_DIR,0777);
+                chmod(UPLOAD_DIR,0700);
             }
 
             // preserve file from temporary directory
@@ -110,7 +110,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && $_SESSION['Lo
 
             $designs = new DkhDesigns();
             
-            $proc= $designs->processDesign($_POST['did'],UPLOAD_DIR . $name);
+            $proc= $designs->processDesign($_POST['did'], $UPLOAD_DIR . $name);
             
             if($proc[0] ==1){
                 $ret = $designs->updateFileUpload($_POST['did']);  

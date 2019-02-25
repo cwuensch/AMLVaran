@@ -85,7 +85,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSI
                         </div>
 
                     </div>
-                    <form id="uploadForm" enctype="text/plain" method="post" action="uploadHandler.php">
+                    <form id="uploadForm" enctype="multipart/form-data" method="post" action="uploadHandler.php">
                         <label for="fileUpload">Select a Fastq, Bam or Vcf file to upload:</label>
                         <input type="file" name="fileUpload" id="fileUpload" />
                     </form>

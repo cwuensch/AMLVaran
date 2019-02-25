@@ -3,11 +3,11 @@ FROM debian
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
 
-# Build arguments (default values)
-ARG MYSQL_HOST=127.0.0.1
-ARG MYSQL_USER=amlvaran
-ARG MYSQL_PASSWORD=123456 
-ARG MYSQL_DATABASE=amlvaran 
+# Environment variables (default values)
+ENV MYSQL_HOST=127.0.0.1
+ENV MYSQL_USER=amlvaran
+ENV MYSQL_PASSWORD=123456
+ENV MYSQL_DATABASE=amlvaran 
 
 # Update operating system
 RUN apt-get -q update && apt-get -q upgrade -yqq
@@ -26,8 +26,9 @@ ENV PATH="/opt/miniconda/bin:$PATH"
 
 # Install Tools via Conda
 WORKDIR /opt
-RUN conda config --add channels conda-forge && \
+RUN conda config --add channels defaults && \
   conda config --add channels bioconda && \
+  conda config --add channels conda-forge && \
   conda config --add channels https://conda.binstar.org/bpeng
 RUN conda install \
   mysql-python \
@@ -42,28 +43,24 @@ RUN conda install \
   trim-galore \
   cutadapt \
   vardict-java=1.5.5 \
-  lofreq=2.1.2 \ 
-  gatk=3.5 \
+  lofreq=2.1.2 \
   varscan=2.4.0 \
   freebayes=1.0.* \
   snver=0.5.3 \
-  platypus-variant=0.8.1 
+  platypus-variant=0.8.1 \
+  openjdk=8 \
+  openssl=1.0
 
-# Special action for GATK
-COPY GenomeAnalysisTK.jar /opt/GATK/
-RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
-
-# Install SNVer (not in bioconda)
-#ADD https://downloads.sourceforge.net/project/snver/SNVer-0.5.3.tar.gz /opt/miniconda/opt/SNVer-0.5.3/
-#COPY SNVerIndividual.sh /opt/miniconda/opt/SNVer-0.5.3/
-#WORKDIR /opt/miniconda/opt/SNVer-0.5.3
-#RUN tar -xzf SNVer-0.5.3.tar.gz
-#RUN rm SNVer-0.5.3.tar.gz
-#RUN ln -s /opt/miniconda/opt/SNVer-0.5.3/SNVerIndividual.sh /opt/miniconda/bin/SNVerIndividual
-#RUN chmod 755 /opt/miniconda/bin/SNVerIndividual
+# Install GATK 3.3 (not in bioconda)
+#COPY GenomeAnalysisTK.jar /opt/GATK/
+#RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
+COPY GenomeAnalysisTK.jar /opt/miniconda/opt/GATK-3.3/
+ADD https://raw.githubusercontent.com/bioconda/bioconda-recipes/master/recipes/gatk/3.5/gatk.sh /opt/miniconda/opt/GATK-3.3/
+RUN ln -s /opt/miniconda/opt/GATK-3.3/gatk.sh /opt/miniconda/bin/gatk
+RUN chmod 755 /opt/miniconda/bin/gatk
 
 # Install PROVEAN (optional)
-RUN conda install cd-hit blast
+RUN conda install cd-hit blast openssl=1.0
 ADD https://static.uni-muenster.de/amlvaran/Reference/Provean_compiled.tar.gz /opt/Provean/
 WORKDIR /opt/Provean
 RUN tar -xzf Provean_compiled.tar.gz
@@ -78,20 +75,24 @@ COPY pipeline /var/pipeline/
 WORKDIR /var/pipeline
 RUN chmod 755 *.sh *.py Callers/*.sh
 
+# Create home dir for VariantTools
+RUN mkdir /root/.variant_tools
+#RUN chown $HOST_USER_ID:$HOST_USER_GROUP /.variant_tools
+RUN vtools --version
+RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
+
+# Set MySQL access data
+RUN echo "[client]" > /root/.my.cnf && \
+    echo "host=${MYSQL_HOST}" >> /root/.my.cnf && \
+    echo "user=${MYSQL_USER}" >> /root/.my.cnf && \
+    echo "password=${MYSQL_PASSWORD}" >> /root/.my.cnf && \
+    echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
+
 # Set environment variables for mounted volumes
 ENV SAMPLEDIR=/var/samples
 ENV GENOME=/var/genomes/Homo_sapiens.GRCh37.67.fasta
 ENV GATK_RES=/var/genomes/gatk
 ENV BLAST_DB=/var/genomes/blast
-RUN vtools --version
-RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
-
-# Set MySQL access data
-RUN echo "[client]" > /root/.my.cnf
-RUN echo "host=${MYSQL_HOST}" >> /root/.my.cnf
-RUN echo "user=${MYSQL_USER}" >> /root/.my.cnf
-RUN echo "password=${MYSQL_PASSWORD}" >> /root/.my.cnf
-RUN echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
 
 
 # Get reference genome [required, but should be mounted instead]

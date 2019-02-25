@@ -1,7 +1,10 @@
-FROM mysql
+FROM mariadb
 
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
+
+CMD ["--innodb_file_per_table", "--character-set-server=utf8", "--collation-server=utf8_unicode_ci", "--skip-character-set-client-handshake"]
+#CMD ["--default-authentication-plugin=mysql_native_password"]
 
 #COPY mysql.cnf /etc/mysql/conf.d/my_config.cnf
 

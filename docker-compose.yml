@@ -4,9 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_db
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     user: ${HOST_USER_ID}:${HOST_GROUP_ID}
+    ports:
+    - 127.0.0.1:3306:3306
     volumes:
     - ./mysql_data:/var/lib/mysql
     environment:
@@ -27,26 +28,35 @@ services:
     depends_on:
     - db
     restart: always
+#    darf nicht homeless sein!
+#    user: ${HOST_USER_ID}:${HOST_GROUP_ID}
     volumes:
     - ./samples:/var/samples
     - ./genomes:/var/genomes
-    
+    environment:
+    - MYSQL_HOST=db
+    - MYSQL_DATABASE
+    - MYSQL_USER
+    - MYSQL_PASSWORD
+      
   web:
     build:
       context: .
       dockerfile: Dockerfile_web
-      args:
-      - MYSQL_HOST=db
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
     depends_on:
     - db
     - worker
     restart: always
     ports:
     - 80:80
-    - 443:443
+#    - 443:443
     volumes:
+#    - ./www:/var/www
     - ./samples:/var/samples
-    
+    environment:
+    - APACHE_RUN_USER=#${HOST_USER_ID}
+    - APACHE_RUN_GROUP=#${HOST_GROUP_ID}
+    - MYSQL_HOST=db
+    - MYSQL_DATABASE
+    - MYSQL_USER
+    - MYSQL_PASSWORD
