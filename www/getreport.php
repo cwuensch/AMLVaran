@@ -23,7 +23,7 @@ if(isset($_POST['sid']) && isset($_POST['version']) && isset($_SESSION['LoggedIn
             include_once "report/generatereport.php";
 
         } else {
-            echo "The sid does not math with the currently logged in user";
+            echo "The sid does not match with the currently logged in user";
         }
     } else {
         echo "Error while checking sid";

@@ -8,8 +8,9 @@
 
 import csv
 import MySQLdb
-from ConfigParser import RawConfigParser
+#from ConfigParser import RawConfigParser
 import sys
+import os
 
 print "ImportCoverage 1.0"
 print "(C) 2016 Christian Wuensch"
@@ -31,12 +32,16 @@ f = open(InputFile, 'r')
 csvReader = csv.reader(f, delimiter='\t', quotechar='"')
 
 # Read MySQL-defaults
-cfgParser = RawConfigParser()
-cfgParser.read("~/.my.cnf")
-DBhost=cfgParser.get("client", "host")
-DBuser=cfgParser.get("client", "user")
-DBpassword=cfgParser.get("client", "password")
-DBdatabase=cfgParser.get("client", "database")
+#cfgParser = RawConfigParser()
+#cfgParser.read("/root/.my.cnf")
+#DBhost=cfgParser.get("client", "host")
+#DBuser=cfgParser.get("client", "user")
+#DBpassword=cfgParser.get("client", "password")
+#DBdatabase=cfgParser.get("client", "database")
+DBhost=os.environ['MYSQL_HOST']
+DBuser=os.environ['MYSQL_USER']
+DBpassword=os.environ['MYSQL_PASSWORD']
+DBdatabase=os.environ['MYSQL_DATABASE']
 
 # Write to MySQL-DB
 con = MySQLdb.connect(DBhost, DBuser, DBpassword, DBdatabase)
@@ -44,7 +49,7 @@ cur = con.cursor()
 
 try:
     print "Deleting old entries..."
-    cur.execute("DELETE FROM Coverage WHERE SampleID=%s", SampleID)
+    cur.execute("DELETE FROM Coverage WHERE SampleID=%s", [SampleID])
 
     print "Writing new entries..."
     next(csvReader, None)  # skip the headers

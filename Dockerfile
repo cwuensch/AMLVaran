@@ -3,11 +3,11 @@ FROM debian
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
 
-# Environment variables (default values)
-ENV MYSQL_HOST=127.0.0.1
-ENV MYSQL_USER=amlvaran
-ENV MYSQL_PASSWORD=123456
-ENV MYSQL_DATABASE=amlvaran 
+# Build arguments (default values)
+ARG MYSQL_HOST=127.0.0.1
+ARG MYSQL_USER=amlvaran
+ARG MYSQL_PASSWORD=123456 
+ARG MYSQL_DATABASE=amlvaran 
 
 # Update operating system
 RUN apt-get -q update && apt-get -q upgrade -yqq
@@ -70,16 +70,19 @@ RUN ln -s /opt/Provean/provean.sh /usr/local/bin
 RUN chmod 755 /usr/local/bin/provean
 RUN chmod 755 /usr/local/bin/provean.sh
 
+# Change data dir for SNPeff
+RUN sed -ri -e 's!./data/!/var/genomes/snpEff/data/!g' /opt/miniconda/share/snpeff-4.2-0/snpEff.config
+
+# Create home dir for VariantTools
+#RUN mkdir /root/.variant_tools
+#RUN chown $HOST_USER_ID:$HOST_USER_GROUP /.variant_tools
+RUN vtools --version
+RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
+
 # Get pipeline code from Git
 COPY pipeline /var/pipeline/
 WORKDIR /var/pipeline
 RUN chmod 755 *.sh *.py Callers/*.sh
-
-# Create home dir for VariantTools
-RUN mkdir /root/.variant_tools
-#RUN chown $HOST_USER_ID:$HOST_USER_GROUP /.variant_tools
-RUN vtools --version
-RUN echo "user_stash='~/.variant_tools;/var/genomes'" >> /root/.variant_tools/user_options.py 
 
 # Set MySQL access data
 RUN echo "[client]" > /root/.my.cnf && \
@@ -87,6 +90,12 @@ RUN echo "[client]" > /root/.my.cnf && \
     echo "user=${MYSQL_USER}" >> /root/.my.cnf && \
     echo "password=${MYSQL_PASSWORD}" >> /root/.my.cnf && \
     echo "database=${MYSQL_DATABASE}" >> /root/.my.cnf
+
+# Environment variables (default values)
+ENV MYSQL_HOST=${MYSQL_HOST}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
 
 # Set environment variables for mounted volumes
 ENV SAMPLEDIR=/var/samples

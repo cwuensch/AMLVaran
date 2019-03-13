@@ -21,6 +21,7 @@ if(isset($_SESSION['LoggedIn']) && $_SESSION['LoggedIn']==1) {
         $pid = $_POST['pid'];
         $version = $_POST['version'];
         $returnstring = '';
+        echo $returnstring;
 
         $samples = new DkhSamples();
         $validsid = $samples->checkSampleID($sid);
@@ -30,33 +31,26 @@ if(isset($_SESSION['LoggedIn']) && $_SESSION['LoggedIn']==1) {
                 //pruefe ob die Ordnerstruktur vorhanden ist und erzeuge sie falls noetig
                 if (!file_exists('../samples/' . $pid) && !is_dir('../samples/' . $pid)) {
                     mkdir ('../samples/' . $pid); 
-//                    chgrp('../samples/' . $pid, 'amlvaran');
-                    chmod('../samples/' . $pid, 0700);
+//                    chmod('../samples/' . $pid, 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid) && !is_dir('../samples/' . $pid . '/' . $sid)) {
                     mkdir ('../samples/' . $pid . '/' . $sid); 
-//                    chgrp('../samples/' . $pid . '/' . $sid, 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid, 0700);
+//                    chmod('../samples/' . $pid . '/' . $sid, 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid . '/reports') && !is_dir('../samples/' . $pid . '/' . $sid . '/reports')) {
                     mkdir ('../samples/' . $pid . '/' . $sid . '/reports'); 
-//                    chgrp('../samples/' . $pid . '/' . $sid . '/reports', 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid . '/reports', 0700);
+//                    chmod('../samples/' . $pid . '/' . $sid . '/reports', 0700);
                 }
                 if (!file_exists('../samples/' . $pid . '/' . $sid . '/reports/version' . $version) && !is_dir('../samples/' . $pid . '/' . $sid . '/reports/version' . $version)) {
                     mkdir('../samples/' . $pid . '/' . $sid . '/reports/version' . $version); 
-//                    chgrp('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 'amlvaran');
-                    chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 0700);
+//                    chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 0700);
                 }
 
                 $returnstring .= file_put_contents('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', $_POST['html']);
-
                 $returnstring .= exec('inc/wkhtmltox/bin/wkhtmltopdf --zoom 0.6 ../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm ../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf');
 
-//                chgrp('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', 'amlvaran');
-                chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', 0666);
-//                chgrp('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf', 'amlvaran');
-                chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf', 0666);
+//                chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', 0666);
+//                chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf', 0666);
 
                 $samples->createPdfReport($sid, $version);
 

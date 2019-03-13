@@ -1,6 +1,9 @@
 SCRIPT_DIR=$(readlink -f $0)
 SCRIPT_DIR=${SCRIPT_DIR%/*}
 
+export HOST_USER_ID=$(id -u)
+export HOST_GROUP_ID=$(id -g)
+
 echo "Downloading ressources. This may take a few hours..."
 
 cd $SCRIPT_DIR/genomes
@@ -26,10 +29,9 @@ if [ ! -d $SCRIPT_DIR/mysql_data/amlvaran ]; then
     mkdir $SCRIPT_DIR/mysql_data
     cd $SCRIPT_DIR/mysql_data
     wget -O- https://static.uni-muenster.de/amlvaran/SQLdump/DB.tar.gz | tar -xz -C $SCRIPT_DIR/mysql_data
+    sudo chown -R $HOST_USER_ID:$HOST_GROUP_ID $SCRIPT_DIR/mysql_data
 fi
 
 echo "Starting Docker..."
 cd $SCRIPT_DIR
-export HOST_USER_ID=$(id -u)
-export HOST_GROUP_ID=$(id -g)
 docker-compose up

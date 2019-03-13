@@ -1142,6 +1142,7 @@
                                         dataType: 'text',
                                         success: function(ret) {
                                             if (debug) console.log("success case ajax 23");
+                                            //ret="<html>hallo</html>";
                                             $.ajax({
                                                 type: "POST",
                                                 url: "generatepdf.php",
@@ -1423,11 +1424,11 @@
                                             if ($(this)[0].cells[columnindices['varTypes']].innerHTML === 'synonymous SNV') {
                                                 $(this).addClass('typefiltered');
                                             } else {
-                                                if (($(this)[0].cells[columnindices['ClinVar_Significance']].innerHTML.indexOf('pathogenic') < 0 ||
-                                                        $(this)[0].cells[columnindices['ClinVar_Significance']].innerHTML.indexOf('Pathogenic') < 0) &&
-                                                    (parseInt($(this)[0].cells[columnindices['Cosmic_NrHaemato']].innerHTML) || 0) <= 1 &&
-                                                    $(this)[0].cells[columnindices['varTypes']].innerHTML !== 'duplication' &&
-                                                    $(this)[0].cells[columnindices['varTypes']].innerHTML !== 'deletion') $(this).addClass('typefiltered');
+                                                if (($(this)[0].cells[columnindices['ClinVar_Significance']].innerHTML.indexOf('athogenic') < 0) &&
+                                                    (((parseInt($(this)[0].cells[columnindices['Cosmic_NrHaemato']].innerHTML) || 0) <= 1) || ($(this)[0].cells[columnindices['Cosmic_SNP']].innerHTML == '1')) &&
+                                                    ($(this)[0].cells[columnindices['varTypes']].innerHTML !== 'duplication') &&
+                                                    ($(this)[0].cells[columnindices['varTypes']].innerHTML !== 'deletion'))
+                                                      $(this).addClass('typefiltered');
                                             }
                                         });
                                         break;
@@ -1830,14 +1831,14 @@
                                     tablehtml += '<th title="GT">GT</th>';
                                     break;
                                 case 'CLNDBN':
-                                    tablehtml += '<th>clinvar Disease</th>';
+                                    tablehtml += '<th>Clinvar Disease</th>';
                                     break;
                                 case 'CLNREVSTAT':
                                     tablehtml += '<th>Review Status</th>';
                                     break;
-                                case 'Cosmic_NrHaemato':
-                                    tablehtml += '<th>Cosmic NrHaemato</th>';
-                                    break;
+//                                case 'Cosmic_NrHaemato':
+//                                    tablehtml += '<th>Cosmic NrHaemato</th>';
+//                                    break;
                                 case 'dbSNP':
                                     tablehtml += '<th title="The ID in the dbSNP-Database">dbSNP</th>';
                                     break;

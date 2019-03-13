@@ -39,6 +39,7 @@ if(isset($_GET['pid']) && isset($_GET['sid']) && isset($_SESSION['LoggedIn']) &&
                 return;
             }
 
+            date_default_timezone_set("Europe/Berlin");
             $size  = filesize($location);
             $time  = date('r', filemtime($location));
 

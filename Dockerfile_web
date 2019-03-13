@@ -9,6 +9,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www
 ENV APACHE_RUN_USER wwwdata
 ENV APACHE_RUN_GROUP wwwdata
 
+RUN apt-get -q update && apt-get install -y \
+  libfontconfig1 libxrender1 libxext6
 RUN docker-php-ext-install pdo pdo_mysql
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -22,6 +24,7 @@ RUN echo "file_uploads = On\n" \
          > /usr/local/etc/php/conf.d/uploads.ini
 
 COPY www/ /var/www/
+RUN chmod a+x /var/www/inc/wkhtmltox/bin/wkhtmltopdf
 
 # Database configuration
 #RUN echo "<?php" > /var/www/inc/constants.inc.php

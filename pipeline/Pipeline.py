@@ -8,7 +8,7 @@
 
 import csv
 import MySQLdb
-from ConfigParser import RawConfigParser
+#from ConfigParser import RawConfigParser
 import sys
 import subprocess
 import os
@@ -49,12 +49,16 @@ protocol = "Sample" + SampleID + "\t" + str(num_lines1) + "\t" + str(num_lines2-
 
 
 # Read MySQL-defaults
-cfgParser = RawConfigParser()
-cfgParser.read("~/.my.cnf")
-DBhost=cfgParser.get("client", "host")
-DBuser=cfgParser.get("client", "user")
-DBpassword=cfgParser.get("client", "password")
-DBdatabase=cfgParser.get("client", "database")
+#cfgParser = RawConfigParser()
+#cfgParser.read("/root/.my.cnf")
+#DBhost=cfgParser.get("client", "host")
+#DBuser=cfgParser.get("client", "user")
+#DBpassword=cfgParser.get("client", "password")
+#DBdatabase=cfgParser.get("client", "database")
+DBhost=os.environ['MYSQL_HOST']
+DBuser=os.environ['MYSQL_USER']
+DBpassword=os.environ['MYSQL_PASSWORD']
+DBdatabase=os.environ['MYSQL_DATABASE']
 
 # Database connection
 con = MySQLdb.connect(DBhost, DBuser, DBpassword, DBdatabase)
@@ -68,7 +72,7 @@ con.autocommit(False)
 print ("STEP 1: Annotation")
 
 # Launch the SNPeff tool
-return_code = subprocess.call("snpeff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
+return_code = subprocess.call("snpEff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
 if (return_code != 0):  sys.exit(11)
 
 # Open input file (SNPeff annotated raw variants)
@@ -213,7 +217,7 @@ if os.path.isfile("./Sample.bam"):
     #   [2] Calculate read quality values with BamReadCount
     # ------------------------------------------------------------
     print ("STEP 2: Quality analysis")
-    Qualitites.clear()
+    del Qualities[:]
 
     # Output chr, pos in BED format
     tempFile = open('Variant_pos.csv', 'w')
@@ -224,7 +228,7 @@ if os.path.isfile("./Sample.bam"):
     tempFile.close()
     
     # Launch BamReadCount tool
-    return_code = subprocess.call("bam_readcount --reference-fasta " + os.environ['GENOME'] + " --site-list ./Variant_pos.csv ./Sample.bam > ./Variant_quals.csv 2>/dev/null", shell=True)
+    return_code = subprocess.call("bam-readcount --reference-fasta " + os.environ['GENOME'] + " --site-list ./Variant_pos.csv ./Sample.bam > ./Variant_quals.csv 2>/dev/null", shell=True)
     if (return_code != 0):  sys.exit(12)
     
     # Process the output of BamReadCount

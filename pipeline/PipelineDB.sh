@@ -28,7 +28,7 @@ do
     STATE=${PARAMS[3]}
     
     cd $SAMPLEDIR/$PATIENTID/$SAMPLEID    
-    mysql -sNe "SELECT chr, start, end FROM tgt_Regions WHERE design='$DESIGN'" > ./Design.bed
+    mysql -sNe "SELECT chr, start-1, end FROM tgt_Regions WHERE design='$DESIGN'" > ./Design.bed
     
     $SCRIPT_DIR/Pipeline.sh -b ./Design.bed -s $STATE $PATIENTID $SAMPLEID
   fi
