@@ -1,6 +1,10 @@
 <!DOCTYPE HTML>
 <head>
   <meta charset="utf-8"/>
+  <?php
+    if (isset($refreshPage))
+      echo ('<meta http-equiv="refresh" content="' . $refreshPage . '">');
+  ?>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->

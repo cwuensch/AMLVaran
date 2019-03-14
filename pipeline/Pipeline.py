@@ -72,7 +72,7 @@ con.autocommit(False)
 print ("STEP 1: Annotation")
 
 # Launch the SNPeff tool
-return_code = subprocess.call("snpEff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
+return_code = subprocess.call("snpEff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic -no non_coding_exon_variant -no synonymous_variant " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
 if (return_code != 0):  sys.exit(11)
 
 # Open input file (SNPeff annotated raw variants)
@@ -128,7 +128,7 @@ for row in csvReader:
         for anno in annos:
             values = anno.split("|")
             if (len(values) >= 11):
-                if (("synonymous_variant" not in values[1]) and ("non_coding_transcript_exon_variant" not in values[1]) and (values[1] != "sequence_feature") and (values[1] != "splice_region_variant") and (values[1] != "TF_binding_site_variant")):
+                if (("synonymous_variant" not in values[1]) and ("non_coding" not in values[1]) and (values[1] != "sequence_feature") and (values[1] != "splice_region_variant") and (values[1] != "TF_binding_site_variant")):
                     AnnoSet = False
                     for i in range(0, len(Transcript)):
                         if (Transcript[i] == values[6]):
@@ -162,7 +162,7 @@ for row in csvReader:
         for anno in annos:
             values = anno.split("|")
             if (len(values) >= 10):
-                if (("synonymous_variant" not in values[0]) and ("non_coding_transcript_exon_variant" not in values[0]) and (values[0] != "sequence_feature") and (values[0] != "splice_region_variant") and (values[0] != "TF_binding_site_variant")):
+                if (("synonymous_variant" not in values[0]) and ("non_coding" not in values[0]) and (values[0] != "sequence_feature") and (values[0] != "splice_region_variant") and (values[0] != "TF_binding_site_variant")):
                     AnnoSet = False
                     for i in range(0, len(Transcript)):
                         if (Transcript[i] == values[8]):
