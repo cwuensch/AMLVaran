@@ -1,7 +1,7 @@
 <?php
     include_once "common/base.php";
     $pageTitle = "Patients";
-    $refreshPage = 60;
+//    $refreshPage = 60;
     include_once "common/header.php";
 
 if(isset($_SESSION['LoggedIn']) && isset($_SESSION['Username']) && isset($_SESSION['editPermission']) && $_SESSION['LoggedIn']==1){ ?>
