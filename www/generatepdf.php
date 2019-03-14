@@ -46,7 +46,7 @@ if(isset($_SESSION['LoggedIn']) && $_SESSION['LoggedIn']==1) {
 //                    chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version, 0700);
                 }
 
-                $returnstring .= file_put_contents('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', $_POST['html']);
+                $returnstring .= file_put_contents('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', urldecode($_POST['html']));
                 $returnstring .= exec('inc/wkhtmltox/bin/wkhtmltopdf --zoom 0.6 ../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm ../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.pdf');
 
 //                chmod('../samples/' . $pid . '/' . $sid . '/reports/version' . $version . '/report.htm', 0666);

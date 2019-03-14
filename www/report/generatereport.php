@@ -97,7 +97,7 @@ if(isset($rows)){
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
       <title>AML VARAN | <?php echo $pageTitle ?></title>
-      <link href="../common/stylesheets/reportstylesheet.css" rel="stylesheet"/>
+      <link href="/var/www/common/stylesheets/reportstylesheet.css" rel="stylesheet"/>
     </head>
     <p class="head3">Clinical Variant Report</p>
     <p class="warningpdf">This is not a medical product. Use only for research purposes!</p>';
@@ -124,6 +124,7 @@ if(isset($rows)){
     
     $overviewstate = 0;
     foreach ($rows as $row) {
+#echo "ROW: NrMut=" . $row['NrMutations'] . ", width=" . $row['width'] . ", Overlap=" . $row['Overlap'] . ", NrGoodCov=" . $row['NrGoodCovered'] . ", isBadCov=" . $row['isBadCovered'] . "<br>";
         if($row['NrMutations'] >= 1) {
             echo '<div class="hotspotsbox mutationsfound" id="hotspotsbox' . $row['MutationID'] . '" style="float:left;">' . $row['name'] . '</div>';
         } else {

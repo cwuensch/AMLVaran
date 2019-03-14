@@ -1142,7 +1142,7 @@
                                         dataType: 'text',
                                         success: function(ret) {
                                             if (debug) console.log("success case ajax 23");
-                                            //ret="<html>hallo</html>";
+                                            ret=encodeURIComponent(ret);
                                             $.ajax({
                                                 type: "POST",
                                                 url: "generatepdf.php",
@@ -1421,7 +1421,7 @@
                                         $('#selectedtype').empty().append('<p>Pathogenous rating by Clinvar and COSMIC (but not synonymous SNV)</p>');
                                         $('#completepanelsubtable > tbody > tr').removeClass('typefiltered');
                                         $.each($('#completepanelsubtable > tbody > tr'), function(key, row) {
-                                            if ($(this)[0].cells[columnindices['varTypes']].innerHTML === 'synonymous SNV') {
+                                            if ($(this)[0].cells[columnindices['varTypes']].innerHTML === 'synonymous SNV'){
                                                 $(this).addClass('typefiltered');
                                             } else {
                                                 if (($(this)[0].cells[columnindices['ClinVar_Significance']].innerHTML.indexOf('athogenic') < 0) &&
@@ -1436,7 +1436,7 @@
                                         $('#selectedtype').empty().append('<p>Protein coding change with severe effect (SNPeff)</p>');
                                         $('#completepanelsubtable > tbody > tr').removeClass('typefiltered');
                                         $.each($('#completepanelsubtable > tbody > tr'), function(key, row) {
-                                            if ($(this)[0].cells[columnindices['varTypes']].innerHTML === 'synonymous SNV' ||
+                                            if (($(this)[0].cells[columnindices['varTypes']].innerHTML === 'synonymous SNV') || 
                                                 ($(this)[0].cells[columnindices['Impacts']].innerHTML.indexOf('MODERATE') == -1 &&
                                                     $(this)[0].cells[columnindices['Impacts']].innerHTML.indexOf('HIGH') == -1)) $(this).addClass('typefiltered');
                                         });
@@ -1934,7 +1934,8 @@
                         var countButtons = 1;
                         $.each(tabledata, function(i, item) {
 
-                            if ((item['regionTypes'] != undefined && (item['regionTypes'] === 'structural' || item['regionTypes'].indexOf('exonic') >= 0 || item['regionTypes'].indexOf('protein_coding') >= 0)) && !(item['varTypes'] != undefined && item['varTypes'] === 'synonymous SNV')) {
+                            if ((item['regionTypes'] != undefined && (item['regionTypes'] === 'structural' || item['regionTypes'].indexOf('exonic') >= 0 || item['regionTypes'].indexOf('protein_coding') >= 0)) &&
+                                !(item['varTypes'] != undefined && (item['varTypes'] === 'synonymous SNV'))) {
                                 // Hotspot Variant --> bright red
                                 if (item['inHotspot'] != undefined && item['inHotspot'] != '') {
                                     tablehtml += '<tr class="coloredvariant1">';
