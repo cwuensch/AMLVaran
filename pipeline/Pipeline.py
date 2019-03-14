@@ -72,7 +72,7 @@ con.autocommit(False)
 print ("STEP 1: Annotation")
 
 # Launch the SNPeff tool
-return_code = subprocess.call("snpEff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic -no non_coding_exon_variant -no synonymous_variant " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
+return_code = subprocess.call("snpEff -Xmx4g -XX:-UseGCOverheadLimit -v GRCh37.75 -hgvs1LetterAa -noStats -no-utr -no-downstream -no-upstream -no-intron -no-intergenic " + InputFile + " > ./Variants_SNPeff.vcf", shell=True)
 if (return_code != 0):  sys.exit(11)
 
 # Open input file (SNPeff annotated raw variants)
