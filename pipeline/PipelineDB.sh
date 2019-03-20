@@ -1,5 +1,5 @@
 #!/bin/bash
-MYIP="$( /sbin/ifconfig eth0 | grep 'inet Adresse' | cut -d: -f2 | awk '{print $1}' )"
+#WORKER_ID="$( /sbin/ifconfig eth0 | grep 'inet Adresse' | cut -d: -f2 | awk '{print $1}' )"
 #SCRIPTS="$( dirname "$0" )"
 SCRIPT_DIR=$(readlink -f $0)
 SCRIPT_DIR=${SCRIPT_DIR%/*}
@@ -15,10 +15,11 @@ SCRIPT_DIR=${SCRIPT_DIR%/*}
 #echo "password=${MYSQL_PASSWORD}" >> ~/.my.cnf
 #echo "database=${MYSQL_DATABASE}" >> ~/.my.cnf
 
+
 while [ 1 ]
 do
-  mysql -sNe "UPDATE samples SET Worker='$MYIP' WHERE (StateCode BETWEEN 1 AND 99) AND (Worker='$MYIP' OR Worker IS NULL) ORDER BY Created LIMIT 1"
-  NEXTSAMPLE=$(mysql -sNe "SELECT PatientID, SampleID, design, StateCode, Worker FROM samples WHERE (StateCode BETWEEN 1 AND 99) AND Worker='$MYIP' ORDER BY Created LIMIT 1")
+  mysql -sNe "UPDATE samples SET Worker='$WORKER_ID' WHERE (StateCode BETWEEN 1 AND 99) AND (Worker='$WORKER_ID' OR Worker IS NULL) ORDER BY Created LIMIT 1"
+  NEXTSAMPLE=$(mysql -sNe "SELECT PatientID, SampleID, design, StateCode, Worker FROM samples WHERE (StateCode BETWEEN 1 AND 99) AND Worker='$WORKER_ID' ORDER BY Created LIMIT 1")
   if [ -n "$NEXTSAMPLE" ]; then
     echo $NEXTSAMPLE
     IFS=$'\t' read -ra PARAMS <<< "$NEXTSAMPLE"

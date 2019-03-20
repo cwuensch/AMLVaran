@@ -38,6 +38,7 @@ services:
     - MYSQL_DATABASE
     - MYSQL_USER
     - MYSQL_PASSWORD
+    - WORKER_ID=worker1
       
   web:
     build:

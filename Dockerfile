@@ -6,8 +6,8 @@ LABEL version=1.0
 # Build arguments (default values)
 ARG MYSQL_HOST=127.0.0.1
 ARG MYSQL_USER=amlvaran
-ARG MYSQL_PASSWORD=123456 
-ARG MYSQL_DATABASE=amlvaran 
+ARG MYSQL_PASSWORD=123456
+ARG MYSQL_DATABASE=amlvaran
 
 # Update operating system
 RUN apt-get -q update && apt-get -q upgrade -yqq
@@ -102,6 +102,7 @@ ENV SAMPLEDIR=/var/samples
 ENV GENOME=/var/genomes/Homo_sapiens.GRCh37.67.fasta
 ENV GATK_RES=/var/genomes/gatk
 ENV BLAST_DB=/var/genomes/blast
+ENV WORKER_ID=worker1
 
 
 # Get reference genome [required, but should be mounted instead]

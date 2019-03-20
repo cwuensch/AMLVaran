@@ -80,7 +80,7 @@ if(!empty($_POST['action'])
                 echo json_encode($samples->getCanonicalTranscript($_POST['gene']));
             break;
         case 'getGeneOverview':
-            if(!empty($_POST['sid']) && !empty($_POST['design']))
+            if(!empty($_POST['sid']) && isset($_POST['design']))
                 echo json_encode($samples->getGeneOverview($_POST['sid'],$_POST['design']));
             break;
         case 'getAll':
@@ -96,11 +96,11 @@ if(!empty($_POST['action'])
                 echo json_encode($samples->getPdfReports($_POST['sid']));
             break;
           case 'getPdfVersion':
-            if(!empty($_POST['sid'])&& !empty('version'))
+            if(!empty($_POST['sid'])&& isset($_POST['version']))
                 echo json_encode($samples->getPdfVersion($_POST['sid'], $_POST['version']));
             break;
         //case 'createPdfReport':
-        //    if(!empty($_POST['sid']) && !empty($_POST['version']))
+        //    if(!empty($_POST['sid']) && isset($_POST['version']))
         //        echo json_encode($samples->createPdfReport($_POST['sid'], $_POST['version'])); #Used by generatepdf.php
         //    break;
         case 'getCurrentVersion':
