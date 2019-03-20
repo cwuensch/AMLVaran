@@ -1907,12 +1907,6 @@
                             columnindices['appreci8'] = i + 2;
                             columnindices['appreci8_arti_protocoll'] = i + 3;
                             columnindices['appreci8_poly_protocoll'] = i + 4;
-                            columnindices['js_result'] = i + 5;
-                            columnindices['js_arti'] = i + 6;
-                            columnindices['js_poly'] = i + 7;
-                            columnindices['js_NRmutinDB'] = i + 8;
-                            columnindices['js_NRdbThres'] = i + 9;
-                            columnindices['js_NRdbThres2'] = i + 10;
 
 
 
@@ -1920,14 +1914,7 @@
                                 '<th>Polymorphism Score</th>' +
                                 '<th>appreci8</th>' +
                                 '<th>appreci8 arti protocoll</th>' +
-                                '<th>appreci8 poly protocoll</th>' +
-                                '<th>js_result</th>' +
-                                '<th>js_arti</th>' +
-                                '<th>js_poly</th>' +
-                                '<th>js_NRmutinDB</th>' +
-                                '<th>js_NRdbThres</th>' +
-                                '<th>js_NRdbThres2</th>';
-
+                                '<th>appreci8 poly protocoll</th>';
 
                         }
                         tablehtml += '</tr></thead><tbody>';
@@ -2010,18 +1997,7 @@
                                     +
                                     '<td></td>' //protocoll-arti-Score
                                     +
-                                    '<td></td>' //protocoll-poly-Score
-                                    +
-                                    '<td></td>' //Old JS appreci8
-                                    +
-                                    '<td></td>' //Old JS arti
-                                    +
-                                    '<td></td>' +
-                                    '<td></td>' +
-                                    '<td></td>' +
-                                    '<td></td>'; //Old JS poly
-
-
+                                    '<td></td>;' //protocoll-poly-Score
 
                             }
                             tablehtml += '</tr>';
