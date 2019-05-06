@@ -55,7 +55,7 @@ RUN conda install \
 #COPY GenomeAnalysisTK.jar /opt/GATK/
 #RUN gatk-register /opt/GATK/GenomeAnalysisTK.jar
 COPY GenomeAnalysisTK.jar /opt/miniconda/opt/GATK-3.3/
-ADD https://raw.githubusercontent.com/bioconda/bioconda-recipes/master/recipes/gatk/3.5/gatk.sh /opt/miniconda/opt/GATK-3.3/
+ADD https://raw.githubusercontent.com/bioconda/bioconda-recipes/96078046de68a37f257c28bb20ef75da0eb8bdb3/recipes/gatk/3.5/gatk.sh /opt/miniconda/opt/GATK-3.3/
 RUN ln -s /opt/miniconda/opt/GATK-3.3/gatk.sh /opt/miniconda/bin/gatk
 RUN chmod 755 /opt/miniconda/bin/gatk
 
