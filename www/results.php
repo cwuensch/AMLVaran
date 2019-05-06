@@ -1819,7 +1819,7 @@
                                     tablehtml += '<th>Function</th>';
                                     break;
                                 case 'AF':
-                                    tablehtml += '<th title="Frequency">Freq</th>';
+                                    tablehtml += '<th title="Frequency">Freq</TableHtmlth>';
                                     break;
                                 case 'AD':
                                     tablehtml += '<th title="Number Reads with mutation">NrRd</th>';
@@ -1997,7 +1997,7 @@
                                     +
                                     '<td></td>' //protocoll-arti-Score
                                     +
-                                    '<td></td>;' //protocoll-poly-Score
+                                    '<td></td>'; //protocoll-poly-Score
 
                             }
                             tablehtml += '</tr>';
