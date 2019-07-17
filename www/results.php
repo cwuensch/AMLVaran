@@ -1819,7 +1819,7 @@
                                     tablehtml += '<th>Function</th>';
                                     break;
                                 case 'AF':
-                                    tablehtml += '<th title="Frequency">Freq</TableHtmlth>';
+                                    tablehtml += '<th title="Frequency">Freq</th>';
                                     break;
                                 case 'AD':
                                     tablehtml += '<th title="Number Reads with mutation">NrRd</th>';
