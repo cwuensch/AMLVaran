@@ -20,7 +20,7 @@ RUN apt-get -q update && apt-get install -y \
 
 # Install Conda
 WORKDIR ~
-ADD https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh miniconda.sh
+ADD https://repo.continuum.io/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh miniconda.sh
 RUN bash miniconda.sh -b -p /opt/miniconda
 ENV PATH="/opt/miniconda/bin:$PATH"
 
