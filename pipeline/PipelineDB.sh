@@ -16,6 +16,16 @@ SCRIPT_DIR=${SCRIPT_DIR%/*}
 #echo "database=${MYSQL_DATABASE}" >> ~/.my.cnf
 
 
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
+
+function ctrl_c() {
+  echo "** Trapped CTRL-C"
+  ps all
+  lsof
+}
+
+
 while [ 1 ]
 do
   mysql -sNe "UPDATE samples SET Worker='$WORKER_ID' WHERE (StateCode BETWEEN 1 AND 99) AND (Worker='$WORKER_ID' OR Worker IS NULL) ORDER BY Created LIMIT 1"

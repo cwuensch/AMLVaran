@@ -50,9 +50,11 @@ if [ ! -d $SCRIPT_DIR/mysql_data/amlvaran ]; then
     echo "Prepopulating MySQL database..."
     mkdir $SCRIPT_DIR/mysql_data
     cd $SCRIPT_DIR/mysql_data
+
     wget -O- https://static.uni-muenster.de/amlvaran/SQLdump/DB.tar.gz | tar -xz -C $SCRIPT_DIR/mysql_data
+#    tar -xzvf /media/holmes/projects/christian/amlvaran/DB.tar.gz -C $SCRIPT_DIR/mysql_data
 fi
 
 echo "Starting Docker..."
 cd $SCRIPT_DIR
-docker-compose up
+docker-compose up --build

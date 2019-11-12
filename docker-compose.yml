@@ -52,7 +52,7 @@ services:
     - 80:80
 #    - 443:443
     volumes:
-#    - ./www:/var/www
+    - ./www:/var/www
     - ./samples:/var/samples
     environment:
     - APACHE_RUN_USER=#${HOST_USER_ID}

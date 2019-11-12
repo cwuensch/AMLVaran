@@ -23,8 +23,8 @@ RUN echo "file_uploads = On\n" \
          "max_execution_time = 600\n" \
          > /usr/local/etc/php/conf.d/uploads.ini
 
-COPY www/ /var/www/
-RUN chmod a+x /var/www/inc/wkhtmltox/bin/wkhtmltopdf
+#COPY www/ /var/www/
+#RUN chmod a+x /var/www/inc/wkhtmltox/bin/wkhtmltopdf
 
 # Database configuration
 #RUN echo "<?php" > /var/www/inc/constants.inc.php
