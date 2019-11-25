@@ -6,7 +6,7 @@ READS2=$3
 
 #if [ ! -f $OUTPUT ] ; then
   # 1. Align with bwa mem
-  bwa mem -M -t 4 $GENOME $READS1 $READS2 > Sample.sam
+  bwa mem -M -t 4 -R "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" $GENOME $READS1 $READS2 > Sample.sam
   if [ $? -ne 0 ]; then
     exit 1
   fi

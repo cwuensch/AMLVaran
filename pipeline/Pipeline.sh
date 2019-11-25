@@ -17,9 +17,15 @@ SCRIPT_DIR=$(readlink -f $0)
 SCRIPT_DIR=${SCRIPT_DIR%/*}
 STATE="0"
 BEDFILE=""
+TARGETBED=""
 if [ "$1" = "-b" ] ; then
   shift
   BEDFILE=$1
+  shift
+fi
+if [ "$1" = "-t" ] ; then
+  shift
+  TARGETBED=$1
   shift
 fi
 if [ "$1" = "-s" ] ; then
@@ -29,7 +35,7 @@ if [ "$1" = "-s" ] ; then
 fi
 
 if [ -z $2 ] ; then
-  echo "Calling: $0 [-b <BED file>] [-s <State>] <PatientID> <SampleID>"
+  echo "Calling: $0 [-b <BED file>] [-t <TargetList>] [-s <State>] <PatientID> <SampleID>"
   echo ""
   exit 1
 fi
@@ -78,10 +84,19 @@ if [ $STATE -lt 20 ] ; then
 fi
 
 if [ $STATE -lt 25 ] ; then
+  # Add read groups
+  echo "[Add read groups]"
+  samtools addreplacerg -m orphan_only -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
+  mv -f Sample_RG.bam Sample.bam
+  STATE="25"
+  mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
+fi
+
+if [ $STATE -lt 27 ] ; then
   # Create index
   echo "[Create index]"
   samtools index -b Sample.bam Sample.bai
-  STATE="25"
+  STATE="27"
   mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
 fi
 
@@ -92,7 +107,9 @@ fi
 
 if [ $STATE -lt 30 ] ; then
   echo "[Calculate coverage]"
-  if [ ! "$BEDFILE" = "" ] ; then
+  if [ ! "$TARGETBED" = "" ] ; then
+    samtools depth -b $TARGETBED Sample.bam > ./Coverage.txt
+  elif [ ! "$BEDFILE" = "" ] ; then
     samtools depth -b $BEDFILE Sample.bam > ./Coverage.txt
   else
     samtools depth Sample.bam > ./Coverage.txt
@@ -127,6 +144,7 @@ if [ $STATE -lt 50 ] ; then
 
   for D in *; do
     if [ -d "${D}" ] && [ ! "${D}" = "log" ] ; then
+      echo "DBG: Importing ${D}"
       vtools import --sample_name "${D}" --format $SCRIPT_DIR/Formats/${D}.fmt ${D}/*.vcf
     fi
   done
@@ -136,8 +154,9 @@ if [ $STATE -lt 50 ] ; then
   
   #vtools execute snpEff eff --snpeff_path /var/amlvaran/opt/snpEff/
   
-  #vtools update variant --set "caller_str=samples()"
   vtools update variant --set "callers=samples()" "genotypes=genotype(,'missing=.')"
+  #vtools update variant --set "callers=samples()"
+  #vtools update variant --set "genotypes=genotype(,'missing=.')"
   vtools export variant --format $SCRIPT_DIR/Formats/myvcf.fmt --header $'##fileformat=VCFv4.1\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO' --var_info callers genotypes --output ./Variants_raw.vcf
   
   #vtools export variant --format vcf --samples 1 --header CHROM POS ID REF ALT QUAL FILTER INFO FORMAT GATK freebayes lofreq lofreq Platypus samtools SNVer SNVer varscan varscan vardict --format_string GT --output ./Variants_raw2.vcf

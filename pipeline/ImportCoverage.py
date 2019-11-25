@@ -26,6 +26,7 @@ else:
 
 print "Importing coverage for SampleID " + SampleID + " from " + InputFile + "..."
 i = 0
+l = 0
 
 # Open CSV file
 f = open(InputFile, 'r')
@@ -43,21 +44,48 @@ DBuser=os.environ['MYSQL_USER']
 DBpassword=os.environ['MYSQL_PASSWORD']
 DBdatabase=os.environ['MYSQL_DATABASE']
 
+Targets = {}
+
 # Write to MySQL-DB
 con = MySQLdb.connect(DBhost, DBuser, DBpassword, DBdatabase)
 cur = con.cursor()
 
 try:
+    print "Getting relevant regions..."
+    cur.execute("SELECT chr, start, end FROM tgt_KnownMutations order by chr, start, end")
+    rows = cur.fetchall()
+    for row in rows:
+        chrom = row[0]
+        start = int(row[1])
+        end   = int(row[2])
+        if not chrom in Targets:
+            Targets[chrom] = []
+        if not [start, end] in Targets[chrom]:
+            Targets[chrom].append([start, end])
+            
+#    for key in Targets:
+#        for tgt in Targets[key]:
+#           print "chr %s: %d - %d" % (key, tgt[0], tgt[1])            
+
     print "Deleting old entries..."
     cur.execute("DELETE FROM Coverage WHERE SampleID=%s", [SampleID])
 
     print "Writing new entries..."
     next(csvReader, None)  # skip the headers
+    
     for row in csvReader:
-        cur.execute("INSERT INTO Coverage(SampleID, chr, pos, cvg) VALUES (%s, %s, %s, %s)", [SampleID, row[0], row[1], row[2]])
-        i = i+1
+        chrom = row[0]
+        pos   = int(row[1])
+        cvg   = int(row[2])
+        if chrom in Targets:
+            for tgt in Targets[chrom]:
+                if (pos >= tgt[0] and pos <= tgt[1]):
+                    cur.execute("INSERT INTO Coverage(SampleID, chr, pos, cvg) VALUES (%s, %s, %s, %s)", [SampleID, chrom, pos, cvg])
+                    i = i+1
+                    break
+        l = l+1
     con.commit()
-    print "%d lines imported." % i
+    print "%d of %d lines imported." % (i, l)
 
 except MySQLdb.Error, e:
   

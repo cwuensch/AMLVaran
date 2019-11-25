@@ -128,7 +128,7 @@ for row in csvReader:
         for anno in annos:
             values = anno.split("|")
             if (len(values) >= 11):
-                if (("synonymous_variant" not in values[1]) and ("non_coding" not in values[1]) and (values[1] != "sequence_feature") and (values[1] != "splice_region_variant") and (values[1] != "TF_binding_site_variant")):
+                if (("synonymous_variant" not in values[1]) and ("non_coding" not in values[1]) and (values[1] != "sequence_feature") and (values[1] != "splice_region_variant") and (values[1] != "TF_binding_site_variant") and (values[1] != "intragenic_variant")):
                     AnnoSet = False
                     for i in range(0, len(Transcript)):
                         if (Transcript[i] == values[6]):
@@ -150,7 +150,10 @@ for row in csvReader:
                         regionType.append(values[7])
                         Codon.append     (values[9])
                         Protein.append(prot)
-                        Exon.append(int(values[8].split('/')[0]))
+                        try:
+                            Exon.append(int(values[8].split('/')[0]))
+                        except:
+                            Exon.append('.')
                         AAchange.append('')
 
     elif (info.find('EFF=') >= 0):

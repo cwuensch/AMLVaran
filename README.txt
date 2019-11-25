@@ -48,21 +48,3 @@ After installation is complete, 3 Docker containers (web interface, database and
 Open http://127.0.0.1 in your webbrowser to access the web interface.
 
 You can first login with the demo account: user "demo", passwort "123456".
-
-You can login into the MySQL database on host 127.0.0.1 with the default credentials "amlvaran", password "123456".
-
-
-Notes
-=====
-
-We strongly recommend to perform the following steps before using the system productively:
-
-(a) Change the default credentials for the MySQL database (in the .env file)
-
-(b) Add your SSL-certificate to the webserver and ensure that all traffic will be SSL encrypted.
-    You will have to change the port from 80 to 443 in docker-compose.yml.
-
-    OR
-
-    Restrict the listening port to the localhost only (by changing 80:80 to 127.0.0.1:80:80) in docker-compose.yml.
-    You may then forward the port by a proxy-server that handles SSL encryption stuff.

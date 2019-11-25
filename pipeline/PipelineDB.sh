@@ -40,8 +40,9 @@ do
     
     cd $SAMPLEDIR/$PATIENTID/$SAMPLEID    
     mysql -sNe "SELECT chr, start-1, end FROM tgt_Regions WHERE design='$DESIGN'" > ./Design.bed
+    mysql -sNe "SELECT chr, start-1, end FROM tgt_KnownMutations ORDER BY chr, start, end" > ./Targets.bed
     
-    $SCRIPT_DIR/Pipeline.sh -b ./Design.bed -s $STATE $PATIENTID $SAMPLEID
+    $SCRIPT_DIR/Pipeline.sh -b ./Design.bed -t ./Targets.bed -s $STATE $PATIENTID $SAMPLEID
   fi
   sleep 5
 done
