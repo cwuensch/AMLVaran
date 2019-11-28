@@ -97,7 +97,7 @@ fi
 if [ $STATE -lt 26 ] ; then
   # Add read groups
   echo "[Add read groups]"
-  samtools addreplacerg -m orphan_only -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
+  samtools addreplacerg -m overwrite_all -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
   mv -f Sample_RG.bam Sample.bam
   STATE="26"
   mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
