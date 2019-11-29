@@ -85,8 +85,8 @@ fi
 
 if [ $STATE -lt 25 ] ; then
   # Filter for target bed
-  echo "[Filter for target bed]"
   if [ ! "$BEDFILE" = "" ] ; then
+    echo "[Filter for target bed]"
     mv -f Sample.bam Sample_full.bam
     samtools view -L $BEDFILE -O BAM -o Sample.bam Sample_full.bam
   fi
@@ -96,9 +96,11 @@ fi
 
 if [ $STATE -lt 26 ] ; then
   # Add read groups
-  echo "[Add read groups]"
-  samtools addreplacerg -m overwrite_all -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
-  mv -f Sample_RG.bam Sample.bam
+  if samtools view -H Sample.bam | grep -q "@RG"; then
+    echo "[Add read groups]"
+    samtools addreplacerg -m overwrite_all -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
+    mv -f Sample_RG.bam Sample.bam
+  fi
   STATE="26"
   mysql -e "UPDATE samples SET StateCode='$STATE' WHERE PatientID='$PATIENTID' AND SampleID='$SAMPLEID'"
 fi
