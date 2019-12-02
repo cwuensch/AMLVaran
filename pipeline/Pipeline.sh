@@ -96,7 +96,7 @@ fi
 
 if [ $STATE -lt 26 ] ; then
   # Add read groups
-  if samtools view -H Sample.bam | grep -q "@RG"; then
+  if ! samtools view -H Sample.bam | grep -q "@RG"; then
     echo "[Add read groups]"
     samtools addreplacerg -m overwrite_all -r "@RG\tID:Sample\tLB:Sample\tSM:Sample\tPL:ILLUMINA" -O BAM -o Sample_RG.bam Sample.bam 
     mv -f Sample_RG.bam Sample.bam
