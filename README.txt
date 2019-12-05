@@ -30,7 +30,7 @@ Installation
 ============
 
 Please use a recent Linux environment, e.g. Debian or Ubuntu.
-Please make sure, that you have got at least 500 GB free disk space.
+Please make sure, that you have got at least 4 CPU cores, 8 GB of RAM and 500 GB free disk space.
 
 1.) Install Docker and docker-compose and dependencies.
 
