@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:buster
 
 LABEL maintainer=christian.wuensch@ukmuenster.de
 LABEL version=1.0
@@ -10,11 +10,11 @@ ARG MYSQL_PASSWORD=123456
 ARG MYSQL_DATABASE=amlvaran
 
 # Update operating system
-RUN apt-get -q update && apt-get -q upgrade -yqq
+#RUN apt-get -q update && apt-get -q upgrade -yqq
 
 # Install libs
 RUN apt-get -q update && apt-get install -y \
-  bzip2 parallel net-tools mysql-client
+  bzip2 parallel net-tools mariadb-client
 #  python2.7 python-mysqldb
 #  openjdk-8-jre-headless 
 
