@@ -28,13 +28,12 @@ ENV PATH="/opt/miniconda/bin:$PATH"
 WORKDIR /opt
 RUN conda config --add channels defaults && \
   conda config --add channels bioconda && \
-  conda config --add channels conda-forge && \
-  conda config --add channels https://conda.binstar.org/bpeng
+  conda config --add channels conda-forge
 RUN conda install \
   mysql-python \
   scipy \
   samtools=1.3 \
-  variant_tools=2.7.0 \
+  variant_tools=3.1.3 \
   vcftools=0.1.* \
   bcftools \
   snpeff=4.2 \
