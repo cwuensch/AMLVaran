@@ -28,11 +28,12 @@ ENV PATH="/opt/miniconda/bin:$PATH"
 WORKDIR /opt
 RUN conda config --add channels defaults && \
   conda config --add channels bioconda && \
-  conda config --add channels conda-forge
+  conda config --add channels conda-forge && \
+  conda config --add channels https://conda.binstar.org/bpeng
 RUN conda install \
   mysql-python \
   scipy \
-  variant_tools=3.1.3 \
+  variant_tools=2.7.0 \
   samtools=1.3 \
   vcftools=0.1.* \
   bcftools \
@@ -46,9 +47,9 @@ RUN conda install \
   varscan=2.4.0 \
   freebayes=1.0.* \
   snver=0.5.3 \
+  platypus-variant=0.8.1 \
   openjdk=8 \
   openssl=1.0
-#  platypus-variant=0.8.1
 
 # Install GATK 3.3 (not in bioconda)
 #COPY GenomeAnalysisTK.jar /opt/GATK/
