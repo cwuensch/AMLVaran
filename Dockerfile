@@ -33,7 +33,6 @@ RUN conda install \
   mysql-python \
   scipy \
   samtools=1.3 \
-  variant_tools=3.1.3 \
   vcftools=0.1.* \
   bcftools \
   snpeff=4.2 \
@@ -49,6 +48,9 @@ RUN conda install \
   platypus-variant=0.8.1 \
   openjdk=8 \
   openssl=1.0
+
+# Install Variant Tools 2.7.0
+pip install variant_tools
 
 # Install GATK 3.3 (not in bioconda)
 #COPY GenomeAnalysisTK.jar /opt/GATK/
