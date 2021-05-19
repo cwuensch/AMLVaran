@@ -29,8 +29,9 @@ WORKDIR /opt
 RUN conda config --add channels defaults && \
   conda config --add channels bioconda && \
   conda config --add channels conda-forge && \
-  conda config --add channels https://conda.binstar.org/bpeng
+  conda config --add channels bpeng
 RUN conda install \
+  python=2.7 \
   mysql-python \
   scipy \
   variant_tools=2.7.0 \
